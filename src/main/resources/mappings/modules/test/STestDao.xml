@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.test.dao.STestDao">
+	
+	<!-- 查询数据
+	<select id="findList" resultType="STest">
+		SELECT ${sqlMap.column.toSql()}
+		FROM ${sqlMap.table.toSql()}
+		<where>
+			${sqlMap.where.toSql()}
+		</where>
+		ORDER BY ${sqlMap.order.toSql()}
+	</select> -->
+
+	<!--<select id="findList" resultType="STest">-->
+		<!--SELECT-->
+			<!--*-->
+		<!--FROM-->
+			<!--s_test-->
+		<!--WHERE-->
+			<!--1 = 1-->
+		<!--<if test="name!=null and name!=''">-->
+        <!--AND name like '%${name}%'-->
+		<!--</if>-->
+		<!--<if test="age!=null and age!=''">-->
+			<!--AND age  = '${age}'-->
+		<!--</if>-->
+	<!--</select>-->
+</mapper>

@@ -1,0 +1,68 @@
+<% layout('/layouts/default.html', {title: '数据管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('数据管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:testUser:edit')){ %>
+					<a href="${ctx}/test/testUser/form" class="btn btn-default btnTool" title="${text('新增数据')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${testUser}" action="${ctx}/test/testUser/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('单行文本')}：</label>
+					<div class="control-inline">
+						<#form:input path="userName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('多行文本')}：</label>
+					<div class="control-inline">
+						<#form:input path="userPassword" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('用户')}', name:'userName', index:'a.test_input', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/test/testUser/form?id='+row.id+'" class="btnList" data-title="${text('编辑数据')}">'+(val||row.id)+'</a>';
+		}},
+        {header:'${text('密码')}', name:'userPassword', index:'a.test_textarea', width:150, align:"left"},
+
+
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:testUser:edit')){ %>
+				actions.push('<a href="${ctx}/test/testUser/form?id='+row.id+'" class="btnList" title="${text('编辑数据')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/test/testUser/disable?id='+row.id+'" class="btnList" title="${text('停用数据')}" data-confirm="${text('确认要停用该数据吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/test/testUser/enable?id='+row.id+'" class="btnList" title="${text('启用数据')}" data-confirm="${text('确认要启用该数据吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/test/testUser/delete?id='+row.id+'" class="btnList" title="${text('删除数据')}" data-confirm="${text('确认要删除该数据吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

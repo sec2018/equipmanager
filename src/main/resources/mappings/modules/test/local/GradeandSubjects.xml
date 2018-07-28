@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.test.dao.localDao.GradeandSubjectsDao">
+
+    <!--mybatis的高级查询： resultMap 实现一对多查询-->
+    <resultMap id="findSubjectByResultMap" type="com.jeesite.modules.test.entity.localentity.GradeandSubjects">
+
+        <id column="id" property="id"/>
+        <result column="grade_id" property="gradeId"/>
+        <result column="num_sub" property="numSub"/>
+
+        <!--property的名字应该和classes类里面的student属性名字一样-->
+        <collection property="subjects" ofType="com.jeesite.modules.test.entity.Subjects">
+            <id column="id" property="id"/>
+            <result column="num_sub" property="numSub"/>
+            <result column="subname" property="subname"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="findAllSubjectsBygradeid"  resultMap="findSubjectByResultMap">
+         SELECT
+            grade_subj_relate.grade_id,
+            subjects.subname
+         FROM
+	        `subjects`,
+	        grade_subj_relate
+        WHERE
+	        `subjects`.num_sub = grade_subj_relate.num_sub
+        AND grade_subj_relate.grade_id = '1020528937372102656'
+    </select>
+
+</mapper>

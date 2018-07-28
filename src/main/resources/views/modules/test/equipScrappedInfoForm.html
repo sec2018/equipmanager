@@ -1,0 +1,188 @@
+<% layout('/layouts/default.html', {title: '设备报废申请', libs: ['validate','fileupload']}){ %>
+<%var user =  @UserUtils.getUser().getLoginCode();%>
+<p id="user" hidden="hidden">${text(user)}</p>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(equipScrappedInfo.isNewRecord ? '新增设备报废申请' : '编辑设备报废申请')}
+		       <p hidden="hidden" id="p_scrappedId">设备报废申请ID ： ${text(equipScrappedInfo.scrappedId)}</p>
+		       <p hidden="hidden" id="p_applyStatus">设备报废申请状态 ： ${text(equipScrappedInfo.applyStatus)}</p>
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${equipScrappedInfo}" action="${ctx}/test/equipScrappedInfo/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('设备报废申请信息')}</div>
+				<#form:hidden path="scrappedId"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="equipId" maxlength="64" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('报废时间')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="scrappedDate" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('报废原因')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="scrappedReason" maxlength="50" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('报废申请人')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="scrappedApplicant" maxlength="50" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('报废审批人')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="scrappedApproval" maxlength="50" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('申请状态')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="applyStatus" maxlength="1" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('删除标记')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="delFlag" maxlength="1" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<#form:hidden   path="scrappedApplicant" maxlength="50" class="form-control"/>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${equipScrappedInfo.id}" bizType="equipScrappedInfo_image"
+									uploadType="image" class="" readonly="false"/>
+							<div><img src=""/></div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${equipScrappedInfo.id}" bizType="equipScrappedInfo_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:equipScrappedInfo:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('提交')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+//add loginUser information
+var user = $('#user').html();
+$('#scrappedApplicant').val(user);
+//审核通过时只能查看，不能编辑
+//if($('#p_applyStatus').html() == '1'){
+//    $("#inputForm").children("input").attr('readonly',true);
+//}
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+
+
+
+
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+
+
+$(function () {
+    if($.getUrlParam("opera") == "view"){
+        $("#equipId").attr("readonly", "readonly");
+        $("#scrappedReason").attr("readonly", "readonly");
+        $("#remarks").attr("readonly", "readonly");
+        // $('#uploadImage').attr("readonly", "readonly");
+        // $('#uploadFile').attr("readonly", "readonly");
+        $(".webuploader-element-invisible").attr("disabled",true);
+        $('#btnSubmit').hide();
+        // $('#back').show();
+    }
+});
+</script>
