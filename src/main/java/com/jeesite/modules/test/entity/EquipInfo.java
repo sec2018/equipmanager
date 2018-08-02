@@ -3,6 +3,10 @@
  */
 package com.jeesite.modules.test.entity;
 
+import com.jeesite.modules.sys.entity.Employee;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.Role;
+import com.jeesite.modules.sys.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -22,7 +26,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
  * @author jyf
  * @version 2018-07-27
  */
-@Table(name="equip_info", alias="a", columns={
+@Table(extFromKeys="dsf",extWhereKeys="dsf",name="equip_info", alias="a", columns={
 		@Column(name="id", attrName="id", label="索引号", isPK=true),
 		@Column(name="equip_id", attrName="equipId", label="设备编号"),
 		@Column(name="equip_manager_code", attrName="equipManagerCode", label="设备管理员编号"),
@@ -39,7 +43,25 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="equip_life", attrName="equipLife", label="设备使用年限"),
 		@Column(includeEntity=DataEntity.class),
 		@Column(name="del_flag", attrName="delFlag", label="删除标记"),
-	}, orderBy="a.update_date DESC"
+	}, joinTable={
+		@JoinTable(type=Type.LEFT_JOIN, entity= User.class, attrName="testUser", alias="u10",
+		on="u10.user_code = a.equip_manager_code", columns={
+		@Column(name="user_code", label="用户编码", isPK=true),
+		@Column(name="user_name", label="用户名称", isQuery=false),
+        }),
+		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="testOffice", alias="u11",
+				on="u11.office_code = a.dept_id", columns={
+				@Column(name="office_code", label="机构编码", isPK=true),
+				@Column(name="office_name", label="机构名称", isQuery=true),
+		}),
+		@JoinTable(type=Type.LEFT_JOIN, entity= Employee.class, attrName="employee", alias="u12",
+				on="u12.emp_code = a.equip_manager_code", columns={
+				@Column(name="emp_code", label="员工编码", isPK=true),
+				@Column(name="office_code", label="机构名称", isQuery=true),
+				@Column(name="office_name", label="机构名称", isQuery=true),
+		})
+
+}, orderBy="a.update_date DESC"
 )
 public class EquipInfo extends DataEntity<EquipInfo> {
 	
@@ -58,6 +80,39 @@ public class EquipInfo extends DataEntity<EquipInfo> {
 	private Date buyTime;		// 购置时间
 	private String equipLife;		// 设备使用年限
 	private String delFlag;		// 删除标记
+
+	private User testUser;		// 用户选择
+	private Office testOffice;		// 机构选择
+	private Employee employee; //员工（部门）数据
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+
+
+	public User getTestUser() {
+		return testUser;
+	}
+
+	public void setTestUser(User testUser) {
+		this.testUser = testUser;
+	}
+
+
+	public Office getTestOffice() {
+		return testOffice;
+	}
+
+	public void setTestOffice(Office testOffice) {
+		this.testOffice = testOffice;
+	}
+
+
 
 
 	
@@ -149,7 +204,7 @@ public class EquipInfo extends DataEntity<EquipInfo> {
 		this.equipPosition = equipPosition;
 	}
 	
-	@NotBlank(message="设备所属部门不能为空")
+
 	@Length(min=0, max=255, message="设备所属部门长度不能超过 255 个字符")
 	public String getDeptId() {
 		return deptId;

@@ -67,16 +67,21 @@
 							<!--</div>-->
 						<!--</div>-->
 					<!--</div>-->
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('申请状态')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="applyStatus" maxlength="1" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-				<!--</div>-->
+				<div class="row">
+				<% if (hasPermi('test:equipScrappedInfo:approve:view')){%>
+				<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('申请状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="applyStatus" maxlength="1"  blankOption="true" dictType="equipScrappedApply_status" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+		    <%}%>
+			</div>
+
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
@@ -143,10 +148,8 @@
 //add loginUser information
 var user = $('#user').html();
 $('#scrappedApplicant').val(user);
-//审核通过时只能查看，不能编辑
-//if($('#p_applyStatus').html() == '1'){
-//    $("#inputForm").children("input").attr('readonly',true);
-//}
+
+
 //获取url参数
 (function ($) {
     $.getUrlParam = function (name) {
@@ -172,12 +175,13 @@ $("#inputForm").validate({
     }
 });
 
-
+//审核通过时只能查看，不能编辑
 $(function () {
     if($.getUrlParam("opera") == "view"){
         $("#equipId").attr("readonly", "readonly");
         $("#scrappedReason").attr("readonly", "readonly");
         $("#remarks").attr("readonly", "readonly");
+        $('#applyStatus').attr("disabled",true);
         // $('#uploadImage').attr("readonly", "readonly");
         // $('#uploadFile').attr("readonly", "readonly");
         $(".webuploader-element-invisible").attr("disabled",true);

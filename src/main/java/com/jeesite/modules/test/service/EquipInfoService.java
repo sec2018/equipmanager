@@ -41,6 +41,11 @@ public class EquipInfoService extends CrudService<EquipInfoDao, EquipInfo> {
 	 */
 	@Override
 	public Page<EquipInfo> findPage(Page<EquipInfo> page, EquipInfo equipInfo) {
+
+		//角色级别数据权限设置
+		//equipInfo.getSqlMap().getDataScope().addFilter("dsf", "Role", "a.role_code","a.create_by");
+		//公司 部门级别数据权限设置
+		//equipInfo.getSqlMap().getDataScope().addFilter("dsf","Office", "u11.office_code","a.create_by");
 		return super.findPage(page, equipInfo);
 	}
 	

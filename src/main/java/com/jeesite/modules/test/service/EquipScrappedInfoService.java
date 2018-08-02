@@ -41,6 +41,7 @@ public class EquipScrappedInfoService extends CrudService<EquipScrappedInfoDao, 
 	 */
 	@Override
 	public Page<EquipScrappedInfo> findPage(Page<EquipScrappedInfo> page, EquipScrappedInfo equipScrappedInfo) {
+
 		return super.findPage(page, equipScrappedInfo);
 	}
 	

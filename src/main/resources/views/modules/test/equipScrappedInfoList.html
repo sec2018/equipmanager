@@ -49,27 +49,27 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('申请状态')}：</label>
-					<div class="control-inline">
-						<#form:input path="applyStatus"  maxlength="1" class="form-control width-120" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('备注信息')}：</label>
-					<div class="control-inline">
-						<#form:input path="remarks" maxlength="255" class="form-control width-120"/>
+					<label class="control-label"   id="label_apply_status" >${text('申请状态')}：</label>
+					<div class="control-inline" style="width: 120px;">
+						<#form:select path="applyStatus"  blankOption="true" dictType="equipScrappedApply_status"  maxlength="1" class="form-control width-120" />
 					</div>
 				</div>
 				<div class="form-group" hidden="hidden">
-					<label class="control-label">${text('状态')}：</label>
+					<label class="control-label" hidden="hidden">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="remarks" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group" hidden="hidden">
+					<label class="control-label" hidden="hidden">${text('状态')}：</label>
 					<div class="control-inline width-120">
-						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+						<#form:select:hidden path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
 					</div>
 				</div>
 				<div class="form-group" hidden="hidden">
-					<label class="control-label">${text('删除标记')}：</label>
+					<label class="control-label" hidden="hidden">${text('删除标记')}：</label>
 					<div class="control-inline">
-						<#form:input path="delFlag" maxlength="1" class="form-control width-120"/>
+						<#form:input:hidden path="delFlag" maxlength="1" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -102,7 +102,7 @@ $('#dataGrid').dataGrid({
 		   }
 		   row.scrappedDate  = row.scrappedDate.substring(0,row.scrappedDate.length-3);
 
-                return '<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" data-title="${text('编辑equip_scrapped_info')}">'+(val||row.id)+'</a>';
+                return '<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" data-title="${text('修改')}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text('报废时间')}', name:'scrappedDate', index:'a.scrapped_date', width:150, align:"center"},
 		{header:'${text('报废原因')}', name:'scrappedReason', index:'a.scrapped_reason', width:150, align:"left"},
@@ -121,18 +121,18 @@ $('#dataGrid').dataGrid({
 			<% if(hasPermi('test:equipScrappedInfo:edit')){ %>
 				if(row.applyStatus == '审核通过'){
 					<%if(hasPermi('test:equipScrappedInfo:view')){%>
-                        actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'&opera=view" class="btnList" title="${text('查看申请信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
+                        actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'&opera=view" class="btnList" title="${text('查看')}"><i class="fa fa-eye"></i></a>&nbsp;');
 					<% } %>
 			    }
 				else {
-				actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" title="${text('编辑equip_scrapped_info')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" title="${text('修改')}"><i class="fa fa-pencil"></i></a>&nbsp;');
 				if (row.status == Global.STATUS_NORMAL){
-					actions.push('<a href="${ctx}/test/equipScrappedInfo/disable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('停用equip_scrapped_info')}" data-confirm="${text('确认要停用该equip_scrapped_info吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/test/equipScrappedInfo/disable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('停用')}" data-confirm="${text('确认要停用该申请吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
 				}
 				if (row.status == Global.STATUS_DISABLE){
-					actions.push('<a href="${ctx}/test/equipScrappedInfo/enable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('启用equip_scrapped_info')}" data-confirm="${text('确认要启用该equip_scrapped_info吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/test/equipScrappedInfo/enable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('启用')}" data-confirm="${text('确认要启用该申请吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				}
-				actions.push('<a href="${ctx}/test/equipScrappedInfo/delete?scrappedId='+row.scrappedId+'" class="btnList" title="${text('删除equip_scrapped_info')}" data-confirm="${text('确认要删除该equip_scrapped_info吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/equipScrappedInfo/delete?scrappedId='+row.scrappedId+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该申请吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
                 };
 				<% } %>
 			return actions.join('');
@@ -146,3 +146,4 @@ $('#dataGrid').dataGrid({
 
 
 </script>
+
