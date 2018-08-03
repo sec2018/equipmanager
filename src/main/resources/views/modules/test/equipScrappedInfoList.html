@@ -100,7 +100,7 @@ $('#dataGrid').dataGrid({
            }else{
               row.applyStatus = "驳回";
 		   }
-		   row.scrappedDate  = row.scrappedDate.substring(0,row.scrappedDate.length-3);
+		     row.scrappedDate  = row.scrappedDate.substring(0,row.scrappedDate.length-3);
 
                 return '<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" data-title="${text('修改')}">'+(val||row.id)+'</a>';
 		}},

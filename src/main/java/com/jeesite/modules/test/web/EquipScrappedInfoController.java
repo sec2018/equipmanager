@@ -3,10 +3,16 @@
  */
 package com.jeesite.modules.test.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.jeesite.common.config.Global;
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.lang.StringUtils;
+import com.jeesite.common.web.BaseController;
+import com.jeesite.modules.sys.entity.User;
+import com.jeesite.modules.sys.utils.UserUtils;
+import com.jeesite.modules.test.entity.EquipScrappedInfo;
+import com.jeesite.modules.test.service.EquipScrappedInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jeesite.common.config.Global;
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.web.BaseController;
-import com.jeesite.modules.test.entity.EquipScrappedInfo;
-import com.jeesite.modules.test.service.EquipScrappedInfoService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * equip_scrapped_infoController
@@ -59,7 +64,32 @@ public class EquipScrappedInfoController extends BaseController {
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<EquipScrappedInfo> listData(EquipScrappedInfo equipScrappedInfo, HttpServletRequest request, HttpServletResponse response) {
-		Page<EquipScrappedInfo> page = equipScrappedInfoService.findPage(new Page<EquipScrappedInfo>(request, response), equipScrappedInfo); 
+		User user = UserUtils.getUser();
+		Subject subject = UserUtils.getSubject();
+
+
+		if(subject.hasRole("repairmen")){
+			equipScrappedInfo.setScrappedApplicant(user.getLoginCode());
+		}
+
+		if(subject.hasRole("equipManager")){
+			equipScrappedInfo.setScrappedApproval(user.getLoginCode());
+		}
+
+
+
+		Page<EquipScrappedInfo> page = equipScrappedInfoService.findPage(new Page<EquipScrappedInfo>(request, response), equipScrappedInfo);
+		Iterator<EquipScrappedInfo> iterator =  page.getList().iterator();
+		while (iterator.hasNext()){
+			EquipScrappedInfo equipScrappedInfo2 = iterator.next();
+			if(equipScrappedInfo2.getScrappedApproval()==null||equipScrappedInfo2.getScrappedApproval()==""){
+				equipScrappedInfo2.setScrappedApproval(equipScrappedInfo2.getEquipInfo().getEquipManager());
+				equipScrappedInfoService.update(equipScrappedInfo2);
+			}else{
+
+			}
+
+		}
 		return page;
 	}
 
@@ -80,6 +110,11 @@ public class EquipScrappedInfoController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated EquipScrappedInfo equipScrappedInfo) {
+         //报废审批人设置 (有问题)
+
+//		String approval = equipScrappedInfo.getEquipInfo().getEquipManager();
+//		equipScrappedInfo.setScrappedApproval(approval);
+
 		equipScrappedInfoService.save(equipScrappedInfo);
 		return renderResult(Global.TRUE, text("保存equip_scrapped_info成功！"));
 	}

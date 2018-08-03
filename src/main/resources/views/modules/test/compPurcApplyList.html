@@ -1,0 +1,125 @@
+<% layout('/layouts/default.html', {title: '备品备件采购申请管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('备品备件采购申请列表')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:compPurcApply:edit')){ %>
+					<a href="${ctx}/test/compPurcApply/form" class="btn btn-default btnTool" title="${text('新增comp_purc_apply')}"><i class="fa fa-plus"></i> ${text('申请')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${compPurcApply}" action="${ctx}/test/compPurcApply/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+			    <div class="form-group">
+				    <label class="control-label">${text('申请编号')}：</label>
+				    <div class="control-inline">
+					   <#form:input path="purchaseApplyCode" maxlength="255" class="form-control width-120"/>
+				    </div>
+			    </div>
+			    <div class="form-group">
+					<label class="control-label" hidden="hidden">${text('备品备件编号')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="componentCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" hidden="hidden">${text('备品备件采购数量')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="purchaseNumber" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('总费用')}：</label>
+					<div class="control-inline">
+						<#form:input path="purchaseCost" class="form-control width-120"/>
+					</div>
+				</div>
+			    <div class="form-group">
+				     <label class="control-label">${text('审批人')}：</label>
+				     <div class="control-inline">
+					    <#form:input path="user.loginCode"  labelPath=	"user.loginCode" class="form-control width-120"/>
+				     </div>
+			    </div>
+				<div class="form-group" >
+					<label class="control-label">${text('申请状态')}：</label>
+					<div class="control-inline" style="width:120px;">
+						<#form:select  dictType="equipScrappedApply_status"  blankOption="true" path="applyStatus" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label"  hidden="hidden">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select:hidden path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" hidden="hidden">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+        {header:'${text('申请编号')}', name:'id', index:'a.id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+                if(row.applyStatus == '0'){
+                    row.applyStatus = "待审核"
+                }else if(row.applyStatus == '1'){
+                    row.applyStatus = "审核通过";
+                }else{
+                    row.applyStatus = "驳回";
+                }
+            return '<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" data-title="${text('编辑comp_purc_apply')}">'+(val||row.id)+'</a>';
+            }},
+        {header:'${text('申请人')}', name:'extend.extendS3', index:'a.extend_s3', width:150, align:"center"},
+        {header:'${text('审批人')}', name:'user.loginCode', index:'', width:150, align:"center"},
+		// {header:'${text('备品备件编号')}', name:'componentCode', index:'a.component_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		// 	return '<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" data-title="${text('编辑comp_purc_apply')}">'+(val||row.id)+'</a>';
+		// }},
+		//{header:'${text('备品备件采购数量')}', name:'purchaseNumber', index:'a.purchase_number', width:150, align:"center"},
+		{header:'${text('总价格')}', name:'purchaseCost', index:'a.purchase_cost', width:150, align:"center"},
+		{header:'${text('申请状态')}', name:'applyStatus', index:'a.apply_status', width:150, align:"left"},
+	    // {header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+		// 	return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
+		// }},
+		{header:'${text('申请时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:compPurcApply:edit')){ %>
+				actions.push('<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('编辑comp_purc_apply')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/test/compPurcApply/disable?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('停用comp_purc_apply')}" data-confirm="${text('确认要停用该comp_purc_apply吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/test/compPurcApply/enable?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('启用comp_purc_apply')}" data-confirm="${text('确认要启用该comp_purc_apply吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/test/compPurcApply/delete?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('删除comp_purc_apply')}" data-confirm="${text('确认要删除该comp_purc_apply吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
