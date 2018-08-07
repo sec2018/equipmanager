@@ -12,6 +12,7 @@ import com.jeesite.common.mybatis.annotation.JoinTable.Type;
 import com.jeesite.common.mybatis.annotation.Table;
 import com.jeesite.common.mybatis.mapper.query.QueryType;
 import com.jeesite.modules.sys.entity.Employee;
+import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.entity.User;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -51,7 +52,13 @@ import java.util.Date;
 		@JoinTable(type = Type.JOIN, entity = Employee.class, attrName = "employee", alias = "e2",
 				on = "e2.emp_code = a.applicant_code", columns = {
 				@Column(name="emp_name", label="员工姓名", queryType = QueryType.LIKE),
+				@Column(name="office_code", label="调入部门编码", queryType = QueryType.LIKE),
 				@Column(name="office_name", label="调入部门", queryType = QueryType.LIKE)
+		}),
+		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="office", alias="u11",
+				on="u11.office_code = e2.office_code", columns={
+				@Column(name="office_code", label="机构编码", isPK=true),
+				@Column(name="office_name", label="机构名称", isQuery=true),
 		}),
 //		@JoinTable(type=Type.LEFT_JOIN, entity=Office.class, attrName="office", alias="o",
 //				on="o.office_code = a.dept_in_code", columns={
@@ -80,13 +87,19 @@ public class EquipTransferInfo extends DataEntity<EquipTransferInfo> {
 	private User user;//声明用户信息实例，在前台显示用户的相关信息
 	//private Office office;
 	private  Employee employee;
+	private Office office;
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+
 	public Employee getEmployee() { return employee; }
 
 	public void setEmployee(Employee employee) { this.employee = employee; }
 
-	//public Office getOffice() { return office; }
+	public Office getOffice() { return office; }
 
-	//public void setOffice(Office office) { this.office = office; }
+	public void setOffice(Office office) { this.office = office; }
 
 	public User getUser() { return user; }
 
