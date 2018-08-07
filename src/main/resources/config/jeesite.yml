@@ -21,11 +21,19 @@ demoMode: false
 # 数据库连接
 jdbc: 
   
-  # Mysql 数据库配置
+  # Mysql 本地数据库配置
+#  type: mysql
+#  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://127.0.0.1:3306/jeesite?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+#  username: root
+#  password: 123456
+#  testSql: SELECT 1
+
+# Mysql 华为云数据库配置
   type: mysql
   driver: com.mysql.jdbc.Driver
-  url: jdbc:mysql://127.0.0.1:3306/jeesite?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-  username: root
+  url: jdbc:mysql://122.112.252.45:3306/jeesite?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+  username: watchdog
   password: 123456
   testSql: SELECT 1
 

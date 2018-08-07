@@ -1,0 +1,128 @@
+<% layout('/layouts/default.html', {title: '备品备件管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('备品备件列表')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:componentInfo:edit')){ %>
+					<a href="${ctx}/test/componentInfo/form" class="btn btn-default btnTool" title="${text('新增备品备件')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${componentInfo}" action="${ctx}/test/componentInfo/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('备品备件编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="componentCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" hidden="hidden">${text('备品备件名称')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="componentName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备品备件类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="componentType" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备品备件型号')}：</label>
+					<div class="control-inline">
+						<#form:input path="componentModel" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备品备件价格')}：</label>
+					<div class="control-inline">
+						<#form:input path="componentPrice" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备品备件数量')}：</label>
+					<div class="control-inline">
+						<#form:input path="componentNumber" maxlength="11" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备品备件状态')}：</label>
+					<div class="control-inline" style="width: 120px;">
+						<#form:select path="componentStatus" dictType="conponent_status" blankOption="true" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" hidden="hidden">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select:hidden path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" hidden="hidden">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('备品备件编号')}', name:'componentCode', index:'a.component_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+
+		    if(row.componentStatus =='0'){
+		       row.componentStatus = "充足";
+            }else{
+		      row.componentStatus = "短缺";
+            }
+		    return '<a href="${ctx}/test/componentInfo/form?id='+row.id+'" class="btnList" data-title="${text('编辑备品备件')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('备品备件名称')}', name:'componentName', index:'a.component_name', width:150, align:"left"},
+		{header:'${text('备品备件类型')}', name:'componentType', index:'a.component_type', width:150, align:"left"},
+		{header:'${text('备品备件型号')}', name:'componentModel', index:'a.component_model', width:150, align:"left"},
+		{header:'${text('备品备件价格')}', name:'componentPrice', index:'a.component_price', width:150, align:"center"},
+		{header:'${text('备品备件数量')}', name:'componentNumber', index:'a.component_number', width:150, align:"center"},
+		{header:'${text('备品备件状态')}', name:'componentStatus', index:'a.component_status', width:150, align:"left"},
+		// {header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+		// 	return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
+		// }},
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:componentInfo:edit')){ %>
+				actions.push('<a href="${ctx}/test/componentInfo/form?id='+row.id+'" class="btnList" title="${text('编辑备品备件')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/test/componentInfo/disable?id='+row.id+'" class="btnList" title="${text('停用备品备件')}" data-confirm="${text('确认要停用该备品备件吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/test/componentInfo/enable?id='+row.id+'" class="btnList" title="${text('启用备品备件')}" data-confirm="${text('确认要启用该备品备件吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/test/componentInfo/delete?id='+row.id+'" class="btnList" title="${text('删除备品备件')}" data-confirm="${text('确认要删除该备品备件吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

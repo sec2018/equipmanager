@@ -1,0 +1,161 @@
+<% layout('/layouts/default.html', {title: '设备报修管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('设备报修管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:equipMaintainApply:edit')){ %>
+					<a href="${ctx}/test/equipMaintainApply/form" class="btn btn-default btnTool" title="${text('新增设备报修')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${equipMaintainApply}" action="${ctx}/test/equipMaintainApply/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('设备编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="equipCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('申请人编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="applicantCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批人编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="approverCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维修人编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainerCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('申请时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="applyDate" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('报修原因')}：</label>
+					<div class="control-inline">
+						<#form:input path="applyReason" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('报修状态')}：</label>
+					<div class="control-inline">
+						<#form:input path="applyStatus" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('申请级别')}：</label>
+					<div class="control-inline">
+						<#form:input path="applyLevel" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			  if(row.applyLevel == '0'){
+		       row.applyLevel = "一般";
+		    }else{
+		       row.applyLevel = "紧急";
+		    }
+			 if(row.applyStatus == '0'){
+		       row.applyStatus = "待审核";
+		    }else if(row.applyStatus == '1'){
+		       row.applyStatus = "待承接";
+		       row.applyDate = row.applyDate.substring(0,row.applyDate.length-3);
+               return '<p>'+(val||row.id)+'</p>';
+		    }else if(row.applyStatus == '2'){
+		       row.applyStatus = "已承接";
+		       row.applyDate = row.applyDate.substring(0,row.applyDate.length-3);
+               return '<p>'+(val||row.id)+'</p>';
+		    }else if(row.applyStatus == '3'){
+		       row.applyStatus = "维修成功";
+		       row.applyDate = row.applyDate.substring(0,row.applyDate.length-3);
+               return '<p>'+(val||row.id)+'</p>';
+		    }else{
+		        row.applyStatus = "维修失败";
+		    }
+		    row.applyDate = row.applyDate.substring(0,row.applyDate.length-3);
+			return '<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'" class="btnList" data-title="${text('编辑设备报修')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('申请人编号')}', name:'applicantCode', index:'a.applicant_code', width:150, align:"left"},
+		{header:'${text('申请人姓名')}', name:'user.userName', index:'', width:150, align:"left"},
+		<!--{header:'${text('审批人编号')}', name:'approverCode', index:'a.approver_code', width:150, align:"left"},-->
+		{header:'${text('审批人编号')}', name:'equipInfo.equipManagerCode', index:'', width:150, align:"left"},
+		{header:'${text('审批人姓名')}', name:'equipInfo.equipManager', index:'', width:150, align:"left"},
+		{header:'${text('维修人编号')}', name:'maintainerCode', index:'a.maintainer_code', width:150, align:"left"},
+		{header:'${text('申请时间')}', name:'applyDate', index:'a.apply_date', width:150, align:"center"},
+		{header:'${text('报修原因')}', name:'applyReason', index:'a.apply_reason', width:150, align:"left"},
+		{header:'${text('报修状态')}', name:'applyStatus', index:'a.apply_status', width:150, align:"left"},
+		{header:'${text('申请级别')}', name:'applyLevel', index:'a.apply_level', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		<!--{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},-->
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:equipMaintainApply:edit')){ %>
+			    if(row.applyStatus == '待承接' || row.applyStatus == '已承接' || row.applyStatus == '维修成功'){
+					<%if(hasPermi('test:equipMaintainApply:view')){%>
+                        actions.push('<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'&opera=view" class="btnList" title="${text('查看申请信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
+					<% } %>
+			    }else{
+					actions.push('<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'" class="btnList" title="${text('编辑设备报修')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					if (row.status == Global.STATUS_NORMAL){
+						actions.push('<a href="${ctx}/test/equipMaintainApply/disable?applyCode='+row.applyCode+'" class="btnList" title="${text('停用设备报修')}" data-confirm="${text('确认要停用该设备报修吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+					}
+					if (row.status == Global.STATUS_DISABLE){
+						actions.push('<a href="${ctx}/test/equipMaintainApply/enable?applyCode='+row.applyCode+'" class="btnList" title="${text('启用设备报修')}" data-confirm="${text('确认要启用该设备报修吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+					}
+					actions.push('<a href="${ctx}/test/equipMaintainApply/delete?applyCode='+row.applyCode+'" class="btnList" title="${text('删除设备报修')}" data-confirm="${text('确认要删除该设备报修吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			    }
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
