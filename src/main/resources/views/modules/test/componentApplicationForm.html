@@ -21,16 +21,9 @@
 				 <#form:input:hidden path="applicationNumber" maxlength="11" class="form-control digits"/>
 				 <#form:input:hidden path="applicationSubmitDate" class="form-control"/>
 				 <#form:input:hidden path="applicationEndDate" class="form-control"/>
+			     <#form:input:hidden path="equipCode" maxlength="255" class="form-control"/>
 
-					+<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="" >
-								<span class="required hide">*</span> ${text('装配设备编号')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="equipCode" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
+
 				</div>
 				<div class="row">
 					<div class="col-xs-6">

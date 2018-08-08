@@ -3,6 +3,10 @@
  */
 package com.jeesite.modules.test.entity;
 
+import com.jeesite.modules.sys.entity.Employee;
+import com.jeesite.modules.sys.entity.Office;
+import com.jeesite.modules.sys.entity.User;
+import com.jeesite.modules.sys.entity.UserRole;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
@@ -37,7 +41,37 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="application_status", attrName="applicationStatus", label="申领状态", comment="申领状态(0-待审核 1-审核通过 2-驳回)"),
 		@Column(includeEntity=DataEntity.class),
 		@Column(includeEntity=Extend.class, attrName="extend"),
-	}, orderBy="a.update_date DESC"
+	},joinTable={
+		@JoinTable(type= Type.LEFT_JOIN, entity = UserRole.class ,  attrName = "userRole" , alias = "u12", on ="a.approval_code=u12.role_code" ,columns = {
+				@Column(name="user_code", label="用户编码", isPK=true),
+				@Column(name="role_code", label="用户角色", isQuery=true),
+		}),
+		@JoinTable(type=Type.LEFT_JOIN, entity= User.class, attrName="testUser", alias="u10",
+				on="u10.user_code = u12.user_code", columns={
+				@Column(name="user_code", label="用户编码", isPK=true),
+				@Column(name="user_name", label="用户名称", isQuery=false),
+		}),
+//		@JoinTable(type= Type.LEFT_JOIN, entity = ComponentApplicationChild.class ,  attrName = "componentApplyChild" , alias = "u8", on ="a.application_code=u8.application_code" ,columns = {
+//				@Column(name="component_code", label="备品备件编码", isPK=true),
+//				@Column(name="equip_code", label="设备编码", isQuery=true),
+//		}),
+//		@JoinTable(type= Type.LEFT_JOIN, entity = ComponentInfo.class ,  attrName = "componentInfo" , alias = "u13", on ="u8.component_code=u13.component_code" ,columns = {
+//				@Column(name="component_name", label="备品备件名称", isQuery=true),
+//				@Column(name="create_by", label="创建者", isQuery=true),
+//		}),
+//		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="testOffice", alias="u11",
+//				on="u11.office_code = a.dept_id", columns={
+//				@Column(name="office_code", label="机构编码", isPK=true),
+//				@Column(name="office_name", label="机构名称", isQuery=true),
+//		}),
+//		@JoinTable(type=Type.LEFT_JOIN, entity= Employee.class, attrName="employee", alias="u12",
+//				on="u12.emp_code = a.equip_manager_code", columns={
+//				@Column(name="emp_code", label="员工编码", isPK=true),
+//				@Column(name="office_code", label="机构名称", isQuery=true),
+//				@Column(name="office_name", label="机构名称", isQuery=true),
+//		})
+
+}, orderBy="a.update_date DESC"
 )
 public class ComponentApplication extends DataEntity<ComponentApplication> {
 	
@@ -55,6 +89,63 @@ public class ComponentApplication extends DataEntity<ComponentApplication> {
 	private String applicationStatus;		// 申领状态(0-待审核 1-审核通过 2-驳回)
 	private Extend extend;		// 扩展字段
 	private List<ComponentApplicationChild> componentApplicationChildList = ListUtils.newArrayList();		// 子表列表
+	private User testUser;		// 用户选择
+	private Office testOffice;		// 机构选择
+	private Employee employee; //员工（部门）数据
+	private UserRole userRole;  //用户角色
+	private ComponentInfo componentInfo ; //备品备件
+	//private ComponentApplicationChild componentApplicationChild;   //备品备件申领子表
+	public ComponentInfo getComponentInfo() {
+		return componentInfo;
+	}
+
+	public void setComponentInfo(ComponentInfo componentInfo) {
+		this.componentInfo = componentInfo;
+	}
+//	public ComponentApplicationChild getComponentApplicationChild() {
+//		return componentApplicationChild;
+//	}
+
+//	public void setComponentApplicationChild(ComponentApplicationChild componentApplicationChild) {
+//		this.componentApplicationChild = componentApplicationChild;
+//	}
+
+
+
+	public UserRole getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+
+
+	public User getTestUser() {
+		return testUser;
+	}
+
+	public void setTestUser(User testUser) {
+		this.testUser = testUser;
+	}
+
+
+	public Office getTestOffice() {
+		return testOffice;
+	}
+
+	public void setTestOffice(Office testOffice) {
+		this.testOffice = testOffice;
+	}
 	
 	public ComponentApplication() {
 		this(null);
@@ -64,7 +155,7 @@ public class ComponentApplication extends DataEntity<ComponentApplication> {
 		super(id);
 	}
 	
-	@NotBlank(message="备品备件编号不能为空")
+
 	@Length(min=0, max=255, message="备品备件编号长度不能超过 255 个字符")
 	public String getComponentCode() {
 		return componentCode;
@@ -91,7 +182,7 @@ public class ComponentApplication extends DataEntity<ComponentApplication> {
 		this.equipCode = equipCode;
 	}
 	
-	@NotBlank(message="备品备件申领人编号不能为空")
+
 	@Length(min=0, max=255, message="备品备件申领人编号长度不能超过 255 个字符")
 	public String getApplicantCode() {
 		return applicantCode;

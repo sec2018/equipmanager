@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.common.entity.Extend;
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,6 +82,15 @@ public class ComponentApplicationController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated ComponentApplication componentApplication) {
+
+
+		//设置申请人（需要具有申请权限）
+		componentApplication.setApplicantCode(UserUtils.getUser().getUserCode());
+		Extend extend = new Extend();
+		extend.setExtendS2(UserUtils.getUser().getUserName());
+		componentApplication.setExtend(extend);
+		//设置审批人(默认只有一个，多个有问题)
+		componentApplication.setApprovalCode("buyer");
 		componentApplicationService.save(componentApplication);
 		return renderResult(Global.TRUE, text("保存component_application成功！"));
 	}
