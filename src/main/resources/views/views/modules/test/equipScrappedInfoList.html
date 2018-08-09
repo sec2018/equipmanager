@@ -1,0 +1,149 @@
+<% layout('/layouts/default.html', {title: '设备报废申请管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('设备报废申请列表')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:equipScrappedInfo:edit')){ %>
+					<a href="${ctx}/test/equipScrappedInfo/form" class="btn btn-default btnTool" title="${text('申请')}"><i class="fa fa-plus"></i> ${text('申请')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${equipScrappedInfo}" action="${ctx}/test/equipScrappedInfo/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('设备编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="equipId" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+
+
+
+				<div class="form-group">
+					<label class="control-label">${text('报废时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="scrappedDate" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('报废原因')}：</label>
+					<div class="control-inline">
+						<#form:input path="scrappedReason" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('报废申请人')}：</label>
+					<div class="control-inline">
+						<#form:input path="scrappedApplicant" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('报废审批人')}：</label>
+					<div class="control-inline">
+						<#form:input id="equipInfo" path="equipInfo.equipManager" labelPath="equipInfo.equipManager" maxlength="50" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label"   id="label_apply_status" >${text('申请状态')}：</label>
+					<div class="control-inline" style="width: 120px;">
+						<#form:select path="applyStatus"  blankOption="true" dictType="equipScrappedApply_status"  maxlength="1" class="form-control width-120" />
+					</div>
+				</div>
+				<div class="form-group" hidden="hidden">
+					<label class="control-label" hidden="hidden">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="remarks" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group" hidden="hidden">
+					<label class="control-label" hidden="hidden">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select:hidden path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group" hidden="hidden">
+					<label class="control-label" hidden="hidden">${text('删除标记')}：</label>
+					<div class="control-inline">
+						<#form:input:hidden path="delFlag" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+
+// 初始化DataGrid对象
+
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('设备编号')}', name:'equipId', index:'a.equip_id', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+           if(row.applyStatus == '0'){
+               row.applyStatus = "待审核"
+           }else if(row.applyStatus == '1'){
+              row.applyStatus = "审核通过";
+              row.scrappedDate  = row.scrappedDate.substring(0,row.scrappedDate.length-3);
+               return '<p>'+(val||row.id)+'</p>';
+           }else{
+              row.applyStatus = "驳回";
+		   }
+		     row.scrappedDate  = row.scrappedDate.substring(0,row.scrappedDate.length-3);
+
+                return '<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" data-title="${text('修改')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('报废时间')}', name:'scrappedDate', index:'a.scrapped_date', width:150, align:"center"},
+		{header:'${text('报废原因')}', name:'scrappedReason', index:'a.scrapped_reason', width:150, align:"left"},
+		{header:'${text('报废申请人')}', name:'scrappedApplicant', index:'a.scrapped_applicant', width:150, align:"left"},
+		{header:'${text('报废审批人')}', name:'equipInfo.equipManager', index:'', width:150, align:"left"},
+		{header:'${text('申请状态')}', name:'applyStatus', index:'a.apply_status', width:150, align:"left"},
+		// {header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		// {header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+		// 	return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
+		// }},
+		// {header:'${text('删除标记')}', name:'delFlag', index:'a.del_flag', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+
+		    var actions = [];
+			<% if(hasPermi('test:equipScrappedInfo:edit')){ %>
+				if(row.applyStatus == '审核通过'){
+					<%if(hasPermi('test:equipScrappedInfo:view')){%>
+                        actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'&opera=view" class="btnList" title="${text('查看')}"><i class="fa fa-eye"></i></a>&nbsp;');
+					<% } %>
+			    }
+				else {
+				actions.push('<a href="${ctx}/test/equipScrappedInfo/form?scrappedId='+row.scrappedId+'" class="btnList" title="${text('修改')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				if (row.status == Global.STATUS_NORMAL){
+					actions.push('<a href="${ctx}/test/equipScrappedInfo/disable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('停用')}" data-confirm="${text('确认要停用该申请吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				}
+				if (row.status == Global.STATUS_DISABLE){
+					actions.push('<a href="${ctx}/test/equipScrappedInfo/enable?scrappedId='+row.scrappedId+'" class="btnList" title="${text('启用')}" data-confirm="${text('确认要启用该申请吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				}
+				actions.push('<a href="${ctx}/test/equipScrappedInfo/delete?scrappedId='+row.scrappedId+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该申请吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+                };
+				<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+
+
+</script>
+

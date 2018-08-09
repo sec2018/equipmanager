@@ -1,0 +1,158 @@
+<% layout('/layouts/default.html', {title: '备品备件采购申请管理', libs: ['validate','fileupload','dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(compPurcApply.isNewRecord ? '备品备件采购采购申请' : '备品备件采购采购申请')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${compPurcApply}" action="${ctx}/test/compPurcApply/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('申请基本信息')}</div>
+				<#form:hidden path="purchaseApplyCode"/>
+				<#form:input:hidden path="componentCode" maxlength="255" class="form-control required"/>
+				<#form:input:hidden path="purchaseNumber" maxlength="11" class="form-control digits"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('总价')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="purchaseCost" class="form-control digits"/>
+							</div>
+						</div>
+					</div>
+
+				</div>
+                <% if (hasPermi('test:compPurc:approve:view	')) {%>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('申请状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select  blankOption="true" dictType="equipScrappedApply_status"  path="applyStatus" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+                <% } %>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${compPurcApply.id}" bizType="compPurcApply_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${compPurcApply.id}" bizType="compPurcApply_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<h4 class="form-unit">${text('增加备品备件')}</h4>
+				<div class="ml10 mr10">
+					<table id="compPurcApplyChildDataGrid"></table>
+					<% if (hasPermi('test:compPurcApply:edit')){ %>
+						<a href="#" id="compPurcApplyChildDataGridAddRowBtn" class="btn btn-primary btn-sm mt10 mb10"><i class="fa fa-plus"></i> ${text('增加')}</a>
+					<% } %>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:compPurcApply:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+//初始化comp_purc_apply_childDataGrid对象
+$("#compPurcApplyChildDataGrid").dataGrid({
+
+	data: ${toJson(compPurcApply.compPurcApplyChildList)},
+	datatype: "local", // 设置本地数据
+	autoGridHeight: function(){return 'auto'}, // 设置自动高度
+	
+	// 设置数据表格列
+	columnModel: [
+		{header:'状态', name:'status', editable:true, hidden:true},
+		{header:'主键', name:'id', editable:true, hidden:true},
+		{header:'${text('备品备件采购申请编号')}', name:'purchaseApplyCode.purchaseApplyCode', editable:true, hidden:true},
+		//{header:'${text('purc_sort')}', name:'purcSort', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'11', 'class':'form-control digits'}},
+		{header:'${text('备品备件编号')}', name:'componentCode', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text('备品备件采购数量')}', name:'purchaseNumber', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'11', 'class':'form-control digits'}},
+		{header:'${text('价格')}', name:'purchaseCost', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control digits'}},
+		//{header:'${text('备品备件采购状态')}', name:'applyStatus', width:150, editable:true, edittype:'text', editoptions:{'maxlength':'255', 'class':'form-control'}},
+		{header:'${text('备注信息')}', name:'remarks', width:150, editable:true, edittype:'textarea', editoptions:{'maxlength':'500', 'class':'form-control', 'rows':'1'}},
+		{header:'${text('操作')}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
+			var actions = [];
+			if (val == 'new'){
+				actions.push('<a href="#" onclick="js.confirm(\'${text('你确认要删除这条数据吗？')}\', function(){$(\'#compPurcApplyChildDataGrid\').dataGrid(\'delRowData\',\''+obj.rowId+'\')});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}else{
+				actions.push('<a href="#" onclick="js.confirm(\'${text('你确认要删除这条数据吗？')}\', function(){$(\'#compPurcApplyChildDataGrid\').dataGrid(\'setRowData\',\''+obj.rowId+'\',null,{display:\'none\'})});$(\'#'+obj.rowId+'_status\').val(\''+Global.STATUS_DELETE+'\');return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			}
+			return actions.join('');
+		}, editoptions: {defaultValue: 'new'}}
+	],
+	
+	// 编辑表格参数
+	editGrid: true,				// 是否是编辑表格
+	editGridInitRowNum: 1,		// 编辑表格的初始化新增行数
+	editGridAddRowBtn: $('#compPurcApplyChildDataGridAddRowBtn'),	// 子表增行按钮
+	editGridAddRowInitData: {id: '', status: Global.STATUS_NORMAL},	// 新增行的时候初始化的数据
+	
+	// 编辑表格的提交数据参数
+	editGridInputFormListName: 'compPurcApplyChildList', // 提交的数据列表名
+	editGridInputFormListAttrs: 'status,id,purchaseApplyCode.purchaseApplyCode,purcSort,componentCode,purchaseNumber,purchaseCost,applyStatus,createBy,createDate,updateBy,updateDate,remarks,extend.extendS1,extend.extendS2,extend.extendS3,extend.extendS4,extend.extendS5,extend.extendS6,extend.extendS7,extend.extendS8,extend.extendI1,extend.extendI2,extend.extendI3,extend.extendI4,extend.extendF1,extend.extendF2,extend.extendF3,extend.extendF4,extend.extendD1,extend.extendD2,extend.extendD3,extend.extendD4,', // 提交数据列表的属性字段
+	
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>

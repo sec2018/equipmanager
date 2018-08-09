@@ -1,0 +1,170 @@
+<% layout('/layouts/default.html', {title: '设备报修管理', libs: ['validate','fileupload']}){ %>
+<%var user =  @UserUtils.getUser().getLoginCode();%>
+<p id="user" hidden="hidden">${text(user)}</p>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(equipMaintainApply.isNewRecord ? '新增设备报修' : '编辑设备报修')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${equipMaintainApply}" action="${ctx}/test/equipMaintainApply/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="applyCode"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="equipCode" maxlength="255" class="form-control required"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('报修原因')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="applyReason" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('申请级别')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<!--<#form:input path="applyLevel" maxlength="255" blankOption="true" dictType="equip_maintain_level" class="form-control"/>-->
+								<#form:select path="applyLevel" maxlength="255" blankOption="true" dictType="equip_maintain_level" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<%if(hasPermi('test:equipMaintainApply:approve:view')){%>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('报修状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="applyStatus" maxlength="1" blankOption="true" dictType="equip_maintain_status" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+				<div class="row">
+					<%if(hasPermi('test:equipMaintainApply:assign:view')){%>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修人编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainerCode" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+		       <!--声明自动获取报修人标签，这个问题让我调试了很久-->
+		       <#form:hidden   path="applicantCode" maxlength="50" class="form-control"/>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${equipMaintainApply.id}" bizType="equipMaintainApply_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${equipMaintainApply.id}" bizType="equipMaintainApply_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:equipMaintainApply:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+var user = $('#user').html();//获取当前登录用户
+$('#applicantCode').val(user);
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+
+//报修状态为待承接、已承接、维修成功时报修人员只能查看，不能编辑，审批人员和维修人员可以根据业务需要修改报修状态
+$(function () {
+    if($.getUrlParam("opera") == "view"){
+        $("#equipCode").attr("readonly", "readonly");
+        $("#applyReason").attr("readonly", "readonly");
+        $("#applyLevel").attr("disabled",true);
+        //$("#applyStatus").attr("disabled",true);审批人员和维修人员要根据业务修改报修状态，所有此处不能设为不可见
+        $("#maintainerCode").attr("readonly","readonly");
+        $("#remarks").attr("readonly", "readonly");
+        // $('#uploadImage').attr("readonly", "readonly");
+        // $('#uploadFile').attr("readonly", "readonly");
+        $(".webuploader-element-invisible").attr("disabled",true);
+        //$('#btnSubmit').hide();//隐藏提交按钮
+        // $('#back').show();
+    }
+});
+</script>

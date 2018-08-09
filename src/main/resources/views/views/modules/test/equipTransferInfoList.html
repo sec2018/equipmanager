@@ -1,0 +1,175 @@
+<% layout('/layouts/default.html', {title: '设备调拨管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('设备调拨管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:equipTransferInfo:edit')){ %>
+					<a href="${ctx}/test/equipTransferInfo/form" class="btn btn-default btnTool" title="${text('新增设备调拨')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${equipTransferInfo}" action="${ctx}/test/equipTransferInfo/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('设备编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="equipCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调拨类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="transferType" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调拨时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="transferDate" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('归还时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="returnDate" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调出部门')}：</label>
+					<div class="control-inline">
+						<#form:input path="deptOutCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调入部门')}：</label>
+					<div class="control-inline">
+						<#form:input path="office.officeName" labelPath="office.officeName" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('安放地点')}：</label>
+					<div class="control-inline">
+						<#form:input path="transferPosition" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调拨原因')}：</label>
+					<div class="control-inline">
+						<#form:input path="transferReason" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('申请者编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="applicantCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('审批者编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="approvalCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('调拨状态')}：</label>
+					<div class="control-inline">
+						<#form:input path="transferStatus" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注信息')}：</label>
+					<div class="control-inline">
+						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			 if(row.transferType == '0'){
+		       row.transferType = "临时";
+		    }else{
+		       row.transferType = "永久";
+		    }
+			 if(row.transferStatus == '0'){
+		       row.transferStatus = "待审核";
+		    }else if(row.transferStatus == '1'){
+		       row.transferStatus = "审核通过";
+		       row.transferDate = row.transferDate.substring(0,row.transferDate.length-3);
+               return '<p>'+(val||row.id)+'</p>';
+		    }else{
+		        row.transferStatus = "驳回";
+		    }
+		    row.transferDate = row.transferDate.substring(0,row.transferDate.length-3);
+			return '<a href="${ctx}/test/equipTransferInfo/form?transferCode='+row.transferCode+'" class="btnList" data-title="${text('编辑设备调拨')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('申请者编号')}', name:'applicantCode', index:'a.applicant_code', width:150, align:"left"},
+		//{header:'${text('申请人姓名')}', name:'user.userName', index:'', width:150, align:"left"},
+		{header:'${text('员工姓名')}', name:'employee.empName', index:'', width:150, align:"left"},
+		{header:'${text('审批者编号')}', name:'equipInfo.equipManagerCode', index:'', width:150, align:"left"},
+		//{header:'${text('审批人姓名')}', name:'equipInfo.equipManager', index:'', width:150, align:"left"},
+		{header:'${text('调拨类型')}', name:'transferType', index:'a.transfer_type', width:150, align:"left"},
+		{header:'${text('调拨时间')}', name:'transferDate', index:'a.transfer_date', width:150, align:"center"},
+		<!--{header:'${text('归还时间')}', name:'returnDate', index:'a.return_date', width:150, align:"center"},-->
+		{header:'${text('调出部门')}', name:'deptOutCode', index:'a.dept_out_code', width:150, align:"left"},
+		<!--{header:'${text('调入部门')}', name:'deptInCode', index:'a.dept_in_code', width:150, align:"left"},-->
+		{header:'${text('调入部门')}', name:'office.officeName', index:'', width:150, align:"left"},
+		{header:'${text('安放地点')}', name:'transferPosition', index:'a.transfer_position', width:150, align:"left"},
+		{header:'${text('调拨原因')}', name:'transferReason', index:'a.transfer_reason', width:150, align:"left"},
+		{header:'${text('调拨状态')}', name:'transferStatus', index:'a.transfer_status', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		<!--{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},-->
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:equipTransferInfo:edit')){ %>
+			     if(row.transferStatus == '审核通过'){//审核通过只能查看，不能编辑
+					<%if(hasPermi('test:equipTransferInfo:view')){%>
+                        actions.push('<a href="${ctx}/test/equipTransferInfo/form?transferCode='+row.transferCode+'&opera=view" class="btnList" title="${text('查看申请信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
+					<% } %>
+				}else{
+					actions.push('<a href="${ctx}/test/equipTransferInfo/form?transferCode='+row.transferCode+'" class="btnList" title="${text('编辑设备调拨')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					if (row.status == Global.STATUS_NORMAL){
+						actions.push('<a href="${ctx}/test/equipTransferInfo/disable?transferCode='+row.transferCode+'" class="btnList" title="${text('停用设备调拨')}" data-confirm="${text('确认要停用该设备调拨吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+					}
+					if (row.status == Global.STATUS_DISABLE){
+						actions.push('<a href="${ctx}/test/equipTransferInfo/enable?transferCode='+row.transferCode+'" class="btnList" title="${text('启用设备调拨')}" data-confirm="${text('确认要启用该设备调拨吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+					}
+					actions.push('<a href="${ctx}/test/equipTransferInfo/delete?transferCode='+row.transferCode+'" class="btnList" title="${text('删除设备调拨')}" data-confirm="${text('确认要删除该设备调拨吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				}
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
