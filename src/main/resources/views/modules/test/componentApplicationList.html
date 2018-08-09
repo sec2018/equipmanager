@@ -114,14 +114,14 @@ $('#dataGrid').dataGrid({
 		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('test:componentApplication:edit')){ %>
-				actions.push('<a href="${ctx}/test/componentApplication/form?applicationCode='+row.applicationCode+'" class="btnList" title="${text('编辑component_application')}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				if (row.status == Global.STATUS_NORMAL){
-					actions.push('<a href="${ctx}/test/componentApplication/disable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('停用component_application')}" data-confirm="${text('确认要停用该component_application吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
-				}
-				if (row.status == Global.STATUS_DISABLE){
-					actions.push('<a href="${ctx}/test/componentApplication/enable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('启用component_application')}" data-confirm="${text('确认要启用该component_application吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
-				}
-				actions.push('<a href="${ctx}/test/componentApplication/delete?applicationCode='+row.applicationCode+'" class="btnList" title="${text('删除component_application')}" data-confirm="${text('确认要删除该component_application吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/componentApplication/form?applicationCode='+row.applicationCode+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				// if (row.status == Global.STATUS_NORMAL){
+				// 	actions.push('<a href="${ctx}/test/componentApplication/disable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('停用component_application')}" data-confirm="${text('确认要停用该component_application吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+				// }
+				// if (row.status == Global.STATUS_DISABLE){
+				// 	actions.push('<a href="${ctx}/test/componentApplication/enable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('启用component_application')}" data-confirm="${text('确认要启用该component_application吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+				// }
+				actions.push('<a href="${ctx}/test/componentApplication/delete?applicationCode='+row.applicationCode+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该备品备件吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
