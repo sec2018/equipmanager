@@ -108,20 +108,20 @@
 		</plugins>
 	</build>
 	
-	<developers>  
-		<developer>
-			<id>thinkgem</id>
-			<name>WangZhen</name>
-			<email>thinkgem at 163.com</email>
-			<roles><role>Project lead</role></roles>
-			<timezone>+8</timezone>  
-		</developer>
-	</developers>
+	<!--<developers>  -->
+		<!--<developer>-->
+			<!--<id>thinkgem</id>-->
+			<!--<name>WangZhen</name>-->
+			<!--<email>thinkgem at 163.com</email>-->
+			<!--<roles><role>Project lead</role></roles>-->
+			<!--<timezone>+8</timezone>  -->
+		<!--</developer>-->
+	<!--</developers>-->
 	
-	<organization>
-		<name>JeeSite</name>
-		<url>http://jeesite.com</url>
-	</organization>
+	<!--<organization>-->
+		<!--<name>JeeSite</name>-->
+		<!--<url>http://jeesite.com</url>-->
+	<!--</organization>-->
 	
 	<repositories>
 		
