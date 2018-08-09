@@ -138,6 +138,10 @@ $('#applicantCode').val(user);
     }
 })(jQuery);
 
+$(function () {
+    $('#equipCode').val($.getUrlParam("equipid"));
+});
+
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){

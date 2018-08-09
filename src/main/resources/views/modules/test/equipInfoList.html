@@ -141,17 +141,17 @@ $('#dataGrid').dataGrid({
 		}},
 		//{header:'${text('设备管理员编号')}', name:'equipManagerCode', index:'a.equip_manager_code', width:150, align:"left"},
 		{header:'${text('设备管理员')}', name:'equipManager', index:'a.equip_manager', width:150, align:"left"},
-		{header:'${text('设备名称')}', name:'equipName', index:'a.equip_name', width:150, align:"left"},
-		{header:'${text('设备类型')}', name:'equipType', index:'a.equip_type', width:150, align:"left"},
+		{header:'${text('设备名称')}', name:'equipName', index:'a.equip_name', width:200, align:"left"},
+		{header:'${text('设备类型')}', name:'equipType', index:'a.equip_type', width:100, align:"left"},
 		{header:'${text('设备型号')}', name:'equipModel', index:'a.equip_model', width:150, align:"left"},
 		//{header:'${text('生产厂商')}', name:'manufacture', index:'a.manufacture', width:150, align:"left"},
 		{header:'${text('设备价格')}', name:'equipPrice', index:'a.equip_price', width:150, align:"right", formatter: function(val, obj, row, act){
 			return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);
 		}},
 		{header:'${text('安放地点')}', name:'equipPosition', index:'a.equip_position', width:150, align:"left"},
-		{header:'${text('设备所属部门')}', name:'testOffice.officeName', index:'', width:150, align:"left"},
-		{header:'${text('设备状态')}', name:'equipStatus', index:'a.equip_status', width:150, align:"left"},
-	 	{header:'${text('购置时间')}', name:'buyTime', index:'a.buy_time', width:150, align:"center"},
+		{header:'${text('所属部门')}', name:'testOffice.officeName', index:'', width:150, align:"left"},
+		{header:'${text('设备状态')}', name:'equipStatus', index:'a.equip_status', width:100, align:"left"},
+	 	{header:'${text('购置时间')}', name:'buyTime', index:'a.buy_time', width:180, align:"center"},
 		//{header:'${text('设备使用年限')}', name:'equipLife', index:'a.equip_life', width:150, align:"left"},
 		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
 		//{header:'${text('备注')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
@@ -159,7 +159,7 @@ $('#dataGrid').dataGrid({
 		// 	return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
 		// }},
 		//{header:'${text('删除标记')}', name:'delFlag', index:'a.del_flag', width:150, align:"left"},
-		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+		{header:'${text('操作')}', name:'actions', width:170, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('test:equipInfo:edit')){ %>
 				actions.push('<a href="${ctx}/test/equipInfo/form?id='+row.id+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
@@ -171,7 +171,9 @@ $('#dataGrid').dataGrid({
 				// }
 				actions.push('<a href="${ctx}/test/equipInfo/delete?id='+row.id+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该设备吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 
-                actions.push('<a href="${ctx}/test/equipScrappedInfo/form?id='+row.equipId+'" class="btnList" title="${text('报废')}"><i class=" fa fa-soccer-ball-o"></i></a>&nbsp;');
+                actions.push('<a href="${ctx}/test/equipTransferInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('调拨')}"><i class="fa fa-arrow-circle-left"></i></a>&nbsp;');
+                actions.push('<a href="${ctx}/test/equipMaintainApply/form?equipid='+row.equipId+'" class="btnList" title="${text('报修')}"><i class="fa fa-wrench"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/equipScrappedInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('报废')}"><i class="fa fa-soccer-ball-o"></i></a>&nbsp;');
 
                 <% } %>
 

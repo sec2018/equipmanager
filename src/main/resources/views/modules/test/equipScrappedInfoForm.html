@@ -161,10 +161,8 @@ $('#scrappedApplicant').val(user);
     }
 })(jQuery);
 
-
-
 $(function () {
-	$('#equipId').val($.getUrlParam("id"));
+	$('#equipId').val($.getUrlParam("equipid"));
 });
 $("#inputForm").validate({
 	submitHandler: function(form){
