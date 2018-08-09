@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.jeesite.common.entity.Extend;
 import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,9 +84,11 @@ public class ComponentApplicationController extends BaseController {
 	@ResponseBody
 	public String save(@Validated ComponentApplication componentApplication) {
 
-
+		Subject subject = UserUtils.getSubject();
 		//设置申请人（需要具有申请权限）
-		componentApplication.setApplicantCode(UserUtils.getUser().getUserCode());
+		if(subject.isPermitted("test:componentApplication:apply:view")){
+			componentApplication.setApplicantCode(UserUtils.getUser().getUserCode());
+		}
 		Extend extend = new Extend();
 		extend.setExtendS2(UserUtils.getUser().getUserName());
 		componentApplication.setExtend(extend);
