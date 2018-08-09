@@ -163,7 +163,9 @@ $('#scrappedApplicant').val(user);
 
 
 
-
+$(function () {
+	$('#equipId').val($.getUrlParam("id"));
+});
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){

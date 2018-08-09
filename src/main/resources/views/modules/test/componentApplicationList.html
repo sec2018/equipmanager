@@ -63,7 +63,7 @@
 				<div class="form-group">
 					<label class="control-label">${text('申领状态')}：</label>
 					<div class="control-inline" style="width:150px;">
-						<#form:select path="applicationStatus" maxlength="1" dictType="equipScrappedApply_status"  blankOption="true" class="form-control width-120"/>
+						<#form:input path="applicationStatus" maxlength="1"  class="form-control width-120"/>
 					</div>
 				</div>
 
@@ -81,6 +81,8 @@
 </div>
 <% } %>
 <script>
+
+
 // 初始化DataGrid对象
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
