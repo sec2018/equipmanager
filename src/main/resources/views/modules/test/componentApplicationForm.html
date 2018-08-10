@@ -1,10 +1,11 @@
 <% layout('/layouts/default.html', {title: 'component_application管理', libs: ['validate','fileupload','dataGrid']}){ %>
+<p id="componentListId" hidden="hidden"></p>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
 				<i class="fa fa-list-alt"></i> ${text(componentApplication.isNewRecord ? '申请领取备品备件' : '编辑申请信息')}
-			</div>
+            </div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
@@ -22,6 +23,7 @@
 				 <#form:input:hidden path="applicationSubmitDate" class="form-control"/>
 				 <#form:input:hidden path="applicationEndDate" class="form-control"/>
 			     <#form:input:hidden path="equipCode" maxlength="255" class="form-control"/>
+
 
 
 				</div>
@@ -96,7 +98,7 @@
 						</div>
 					</div>
 				</div>
-				<h4 class="form-unit">${text('component_application_child')}</h4>
+				<h4 class="form-unit">${text('增加备品备件')}</h4>
 				<div class="ml10 mr10">
 					<table id="componentApplicationChildDataGrid"></table>
 					<% if (hasPermi('test:componentApplication:edit')){ %>
@@ -119,6 +121,17 @@
 </div>
 <% } %>
 <script>
+
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+
+})(jQuery);
 //初始化component_application_childDataGrid对象
 $("#componentApplicationChildDataGrid").dataGrid({
 
@@ -162,7 +175,9 @@ $("#componentApplicationChildDataGrid").dataGrid({
 		// {header:'${text('扩展 Date 3')}', name:'extend.extendD3', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control'}},
 		// {header:'${text('扩展 Date 4')}', name:'extend.extendD4', width:150, editable:true, edittype:'text', editoptions:{'class':'form-control'}},
 		{header:'${text('操作')}', name:'actions', width:80, sortable:false, fixed:true, formatter: function(val, obj, row, act){
-			var actions = [];
+			var componentListId  = row.id;
+			$('#componentListId').html(row.id);
+		    var actions = [];
 			if (val == 'new'){
 				actions.push('<a href="#" onclick="js.confirm(\'${text('你确认要删除这条数据吗？')}\', function(){$(\'#componentApplicationChildDataGrid\').dataGrid(\'delRowData\',\''+obj.rowId+'\')});return false;"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			}else{
@@ -201,4 +216,27 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+
+//审核通过时只能查看，不能编辑
+$(function () {
+    if($.getUrlParam("opera") == "view"){
+        $("#applicationReason").attr("readonly", "readonly");
+        $("#remarks").attr("readonly", "readonly");
+        $('#applicationStatus').attr("disabled",true);
+        $('#componentApplicationChildDataGridAddRowBtn').hide();
+        // $('#uploadFile').attr("readonly", "readonly");
+
+        $(".webuploader-element-invisible").attr("disabled",true);
+        $('#btnSubmit').hide();
+
+        //增加的备品备件不可更改
+		 var childrowid = $('#componentListId').html();
+         $("[rowid="+childrowid+"]").attr("readonly", "readonly");
+         //设置附件不能增加（不生效）
+          $('#uploadFilefilePicker2').attr("style","display:none;");
+          $('#uploadImagefilePicker2').attr("style","display:none;");
+    }
+});
+
 </script>

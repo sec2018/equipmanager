@@ -1,4 +1,4 @@
-<% layout('/layouts/default.html', {title: 'component_application管理', libs: ['dataGrid']}){ %>
+<% layout('/layouts/default.html', {title: '备品备件申领管理', libs: ['dataGrid']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header">
@@ -8,7 +8,7 @@
 			<div class="box-tools pull-right">
 				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
 				<% if(hasPermi('test:componentApplication:edit')){ %>
-					<a href="${ctx}/test/componentApplication/form" class="btn btn-default btnTool" title="${text('新增component_application')}"><i class="fa fa-plus"></i> ${text('申请')}</a>
+					<a href="${ctx}/test/componentApplication/form" class="btn btn-default btnTool" title="${text('新增component_application')}"><i class="fa fa-plus"></i> ${text('申领')}</a>
 				<% } %>
 			</div>
 		</div>
@@ -87,11 +87,12 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text('申请编号')}', name:'applicationCode', index:'a.application_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text('申请编号')}', name:'applicationCode', index:'a.application_code', width:180, align:"left", frozen:true, formatter: function(val, obj, row, act){
                 if(row.applicationStatus == '0'){
                     row.applicationStatus = "待审核"
                 }else if(row.applicationStatus == '1'){
                     row.applicationStatus = "审核通过";
+                    return '<p>'+(val||row.applicationCode)+'</p>';
                 }else{
                     row.applicationStatus = "驳回";
                 }
@@ -114,7 +115,13 @@ $('#dataGrid').dataGrid({
 		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('test:componentApplication:edit')){ %>
-				actions.push('<a href="${ctx}/test/componentApplication/form?applicationCode='+row.applicationCode+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+                    if(row.applicationStatus == '审核通过'){
+                        <%if(hasPermi('test:componentApplication:view')){%>
+                            actions.push('<a href="${ctx}/test/componentApplication/form?applicationCode='+row.applicationCode+'&opera=view" class="btnList" title="${text('查看')}"><i class="fa fa-eye"></i></a>&nbsp;');
+                        <% } %>
+                    }
+                    else {
+                actions.push('<a href="${ctx}/test/componentApplication/form?applicationCode='+row.applicationCode+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
 				// if (row.status == Global.STATUS_NORMAL){
 				// 	actions.push('<a href="${ctx}/test/componentApplication/disable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('停用component_application')}" data-confirm="${text('确认要停用该component_application吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
 				// }
@@ -122,6 +129,7 @@ $('#dataGrid').dataGrid({
 				// 	actions.push('<a href="${ctx}/test/componentApplication/enable?applicationCode='+row.applicationCode+'" class="btnList" title="${text('启用component_application')}" data-confirm="${text('确认要启用该component_application吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				// }
 				actions.push('<a href="${ctx}/test/componentApplication/delete?applicationCode='+row.applicationCode+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该备品备件吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			   }
 			<% } %>
 			return actions.join('');
 		}}
