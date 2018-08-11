@@ -84,6 +84,7 @@ $('#dataGrid').dataGrid({
                     row.applyStatus = "待审核"
                 }else if(row.applyStatus == '1'){
                     row.applyStatus = "审核通过";
+                    return '<p>'+(val||row.purchaseApplyCode)+'</p>';
                 }else{
                     row.applyStatus = "驳回";
                 }
@@ -105,6 +106,12 @@ $('#dataGrid').dataGrid({
 		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('test:compPurcApply:edit')){ %>
+				if(row.applyStatus == '审核通过'){
+				<%if(hasPermi('test:compPurcApply:view')){%>
+						actions.push('<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'&opera=view" class="btnList" title="${text('查看')}"><i class="fa fa-eye"></i></a>&nbsp;');
+				<% } %>
+				}
+				else {
 				actions.push('<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
 				// if (row.status == Global.STATUS_NORMAL){
 				// 	actions.push('<a href="${ctx}/test/compPurcApply/disable?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('停用comp_purc_apply')}" data-confirm="${text('确认要停用该comp_purc_apply吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
@@ -113,6 +120,7 @@ $('#dataGrid').dataGrid({
 				// 	actions.push('<a href="${ctx}/test/compPurcApply/enable?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('启用comp_purc_apply')}" data-confirm="${text('确认要启用该comp_purc_apply吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				// }
 				actions.push('<a href="${ctx}/test/compPurcApply/delete?purchaseApplyCode='+row.purchaseApplyCode+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该备品备件吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			    }
 			<% } %>
 			return actions.join('');
 		}}
