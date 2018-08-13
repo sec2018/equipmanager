@@ -16,3 +16,4 @@ import com.jeesite.modules.test.entity.ComponentApplicationChild;
 public interface ComponentApplicationChildDao extends CrudDao<ComponentApplicationChild> {
 	
 }
+

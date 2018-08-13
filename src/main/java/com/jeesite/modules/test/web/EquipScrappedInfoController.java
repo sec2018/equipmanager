@@ -9,7 +9,9 @@ import com.jeesite.common.lang.StringUtils;
 import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.utils.UserUtils;
+import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.entity.EquipScrappedInfo;
+import com.jeesite.modules.test.service.EquipInfoService;
 import com.jeesite.modules.test.service.EquipScrappedInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
@@ -38,6 +40,9 @@ public class EquipScrappedInfoController extends BaseController {
 
 	@Autowired
 	private EquipScrappedInfoService equipScrappedInfoService;
+
+	@Autowired
+	private EquipInfoService equipInfoService;
 	
 	/**
 	 * 获取数据
@@ -115,7 +120,20 @@ public class EquipScrappedInfoController extends BaseController {
 //		String approval = equipScrappedInfo.getEquipInfo().getEquipManager();
 //		equipScrappedInfo.setScrappedApproval(approval);
 
+
 		equipScrappedInfoService.save(equipScrappedInfo);
+		//若申请报废的状态是：1-审核通过，则更新审核通过的设备表中的设备状态为：2-报废
+		if(equipScrappedInfo.getApplyStatus()=="1"){
+			EquipInfo equipInfo = new EquipInfo();
+			equipInfo.setEquipId(equipScrappedInfo.getEquipId());
+			List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+			if(!equipInfoList.isEmpty()){
+				EquipInfo equipInfo2 = equipInfoList.get(0);
+				equipInfo2.setEquipStatus("2"); //设置报废状态
+				equipInfoService.update(equipInfo2);
+			}
+		}
+
 		return renderResult(Global.TRUE, text("保存equip_scrapped_info成功！"));
 	}
 	
