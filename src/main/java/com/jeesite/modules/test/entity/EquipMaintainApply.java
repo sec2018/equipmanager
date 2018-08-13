@@ -39,7 +39,7 @@ import java.util.Date;
 				@Column(name = "equip_manager", label = "设备管理员名称", queryType = QueryType.LIKE)
 		}),
 		@JoinTable(type = Type.JOIN, entity = User.class, attrName = "user", alias = "u",
-				on = "u.login_code = a.applicant_code", columns = {
+				on = "u.user_code = a.applicant_code", columns = {
 				@Column(name = "user_name", label = "申请人姓名", queryType = QueryType.LIKE)
 		}),
 },orderBy="a.update_date DESC"

@@ -84,9 +84,6 @@ public class EquipInfoController extends BaseController {
 	}
 
 
-
-
-
 	/**
 	 * 查看编辑表单
 	 */
@@ -155,5 +152,17 @@ public class EquipInfoController extends BaseController {
 		equipInfoService.delete(equipInfo);
 		return renderResult(Global.TRUE, text("删除equip_info成功！"));
 	}
-	
+
+	/**
+	 * date:2018-8-10
+	 * add new test code by dang
+	 * 修改equip_info状态
+	 */
+//	@RequiresPermissions("test:equipInfo:edit")
+//	@RequestMapping(value = "updateStatus")
+//	@ResponseBody
+//	public String updateStatus(EquipInfo equipInfo) {
+//		equipInfoService.updateStatus(equipInfo);
+//		return renderResult(Global.TRUE, text("修改equip_info成功！"));
+//	}
 }

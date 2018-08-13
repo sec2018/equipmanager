@@ -1,5 +1,5 @@
 <% layout('/layouts/default.html', {title: '设备报修管理', libs: ['validate','fileupload']}){ %>
-<%var user =  @UserUtils.getUser().getLoginCode();%>
+<%var user =  @UserUtils.getUser().getUserCode();%>
 <p id="user" hidden="hidden">${text(user)}</p>
 <div class="main-content">
 	<div class="box box-main">
@@ -137,7 +137,7 @@ $('#applicantCode').val(user);
         if (r != null) return decodeURIComponent(r[2]); return null;
     }
 })(jQuery);
-
+//从设备列表页面获取要报修的设备编号传到设备报修申请表单，实现自动获取所报修设备编号功能
 $(function () {
     $('#equipCode').val($.getUrlParam("equipid"));
 });

@@ -186,4 +186,35 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+
+$(function () {//设备状态为报修、调拨、报废时只能查看不能编辑
+    if($.getUrlParam("opera") == "view"){
+        $("#equipId").attr("readonly", "readonly");
+        $("#equipManager").attr("readonly", "readonly");
+        $("#equipName").attr("readonly", "readonly");
+        $("#equipType").attr("readonly", "readonly");
+        $("#equipModel").attr("readonly","readonly");
+        $("#manufacture").attr("readonly", "readonly");
+        $("#equipPrice").attr("readonly", "readonly");
+        $("#equipPosition").attr("readonly", "readonly");
+        $("#deptId").attr("readonly", "readonly");
+        $("#equipStatus").attr("readonly", "readonly");
+        $("#buyTime").attr("disabled",true);
+        $("#equipLife").attr("readonly", "readonly");
+        // $('#uploadImage').attr("readonly", "readonly");
+        // $('#uploadFile').attr("readonly", "readonly");
+        $(".webuploader-element-invisible").attr("disabled",true);
+        $('#btnSubmit').hide();//隐藏提交按钮
+        // $('#back').show();
+    }
+});
 </script>

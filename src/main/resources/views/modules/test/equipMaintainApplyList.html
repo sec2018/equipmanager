@@ -42,7 +42,7 @@
 				<div class="form-group">
 					<label class="control-label">${text('申请时间')}：</label>
 					<div class="control-inline">
-						<#form:input path="applyDate" class="form-control width-120"/>
+						<#form:input type="date" path="applyDate" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -52,29 +52,29 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('报修状态')}：</label>
-					<div class="control-inline">
-						<#form:input path="applyStatus" maxlength="1" class="form-control width-120"/>
+					<label class="control-label" id="label_apply_status">${text('报修状态')}：</label>
+					<div class="control-inline" style="width: 120px;">
+						<#form:select path="applyStatus" maxlength="1" blankOption="true" dictType="equip_maintain_status" class="form-control width-120"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="control-label">${text('申请级别')}：</label>
-					<div class="control-inline">
-						<#form:input path="applyLevel" maxlength="255" class="form-control width-120"/>
+					<div class="control-inline" style="width: 120px;">
+						<#form:select path="applyLevel" maxlength="255" blankOption="true" dictType="equip_maintain_level" class="form-control width-120"/>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label">${text('状态')}：</label>
-					<div class="control-inline width-120">
-						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label">${text('备注信息')}：</label>
-					<div class="control-inline">
-						<#form:input path="remarks" maxlength="500" class="form-control width-120"/>
-					</div>
-				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
 					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
@@ -115,12 +115,12 @@ $('#dataGrid').dataGrid({
 		        row.applyStatus = "维修失败";
 		    }
 		    row.applyDate = row.applyDate.substring(0,row.applyDate.length-3);
-			return '<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'" class="btnList" data-title="${text('编辑设备报修')}">'+(val||row.id)+'</a>';
+			return '<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'&equipid='+row.equipCode+'" class="btnList" data-title="${text('编辑设备报修')}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text('申请人编号')}', name:'applicantCode', index:'a.applicant_code', width:150, align:"left"},
+		//{header:'${text('申请人编号')}', name:'applicantCode', index:'a.applicant_code', width:150, align:"left"},
 		{header:'${text('申请人姓名')}', name:'user.userName', index:'', width:150, align:"left"},
 		<!--{header:'${text('审批人编号')}', name:'approverCode', index:'a.approver_code', width:150, align:"left"},-->
-		{header:'${text('审批人编号')}', name:'equipInfo.equipManagerCode', index:'', width:150, align:"left"},
+		//{header:'${text('审批人编号')}', name:'equipInfo.equipManagerCode', index:'', width:150, align:"left"},
 		{header:'${text('审批人姓名')}', name:'equipInfo.equipManager', index:'', width:150, align:"left"},
 		{header:'${text('维修人编号')}', name:'maintainerCode', index:'a.maintainer_code', width:150, align:"left"},
 		{header:'${text('申请时间')}', name:'applyDate', index:'a.apply_date', width:150, align:"center"},
@@ -140,7 +140,7 @@ $('#dataGrid').dataGrid({
                         actions.push('<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'&opera=view" class="btnList" title="${text('查看申请信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
 					<% } %>
 			    }else{
-					actions.push('<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'" class="btnList" title="${text('编辑设备报修')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					actions.push('<a href="${ctx}/test/equipMaintainApply/form?applyCode='+row.applyCode+'&equipid='+row.equipCode+'" class="btnList" title="${text('编辑设备报修')}"><i class="fa fa-pencil"></i></a>&nbsp;');
 					if (row.status == Global.STATUS_NORMAL){
 						actions.push('<a href="${ctx}/test/equipMaintainApply/disable?applyCode='+row.applyCode+'" class="btnList" title="${text('停用设备报修')}" data-confirm="${text('确认要停用该设备报修吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
 					}

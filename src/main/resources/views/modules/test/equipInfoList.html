@@ -132,6 +132,8 @@ $('#dataGrid').dataGrid({
                     row.equipStatus = "正常"
                 }else if(row.equipStatus == '1'){
                     row.equipStatus = "报修";
+                }else if(row.equipStatus == '3'){
+                 	row.equipStatus = "调拨";
                 }else{
                     row.equipStatus = "报废";
                 }
@@ -162,24 +164,31 @@ $('#dataGrid').dataGrid({
 		{header:'${text('操作')}', name:'actions', width:170, sortable:false, title:false, formatter: function(val, obj, row, act){
 			var actions = [];
 			<% if(hasPermi('test:equipInfo:edit')){ %>
-				actions.push('<a href="${ctx}/test/equipInfo/form?id='+row.id+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
-				// if (row.status == Global.STATUS_NORMAL){
-				// 	actions.push('<a href="${ctx}/test/equipInfo/disable?id='+row.id+'" class="btnList" title="${text('停用equip_info')}" data-confirm="${text('确认要停用该equip_info吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
-				// }
-				// if (row.status == Global.STATUS_DISABLE){
-				// 	actions.push('<a href="${ctx}/test/equipInfo/enable?id='+row.id+'" class="btnList" title="${text('启用equip_info')}" data-confirm="${text('确认要启用该equip_info吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
-				// }
-				actions.push('<a href="${ctx}/test/equipInfo/delete?id='+row.id+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该设备吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				 if(row.equipStatus == '报修' || row.equipStatus == '调拨' || row.equipStatus == '报废'){
+					<%if(hasPermi('test:equipInfo:view')){%>
+                        actions.push('<a href="${ctx}/test/equipInfo/form?id='+row.id+'&opera=view" class="btnList" title="${text('查看设备信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
+					<% } %>
+			    }else{
+					actions.push('<a href="${ctx}/test/equipInfo/form?id='+row.id+'" class="btnList" title="${text('编辑')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+					// if (row.status == Global.STATUS_NORMAL){
+					// 	actions.push('<a href="${ctx}/test/equipInfo/disable?id='+row.id+'" class="btnList" title="${text('停用equip_info')}" data-confirm="${text('确认要停用该equip_info吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');
+					// }
+					// if (row.status == Global.STATUS_DISABLE){
+					// 	actions.push('<a href="${ctx}/test/equipInfo/enable?id='+row.id+'" class="btnList" title="${text('启用equip_info')}" data-confirm="${text('确认要启用该equip_info吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
+					// }
+					actions.push('<a href="${ctx}/test/equipInfo/delete?id='+row.id+'" class="btnList" title="${text('删除')}" data-confirm="${text('确认要删除该设备吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 
-                <% if(hasPermi('test:equipTransferInfo:apply:edit')){ %>
-						actions.push('<a href="${ctx}/test/equipTransferInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('调拨')}"><i class="fa fa-arrow-circle-left"></i></a>&nbsp;');
-                <% } %>
-                <% if(hasPermi('test:equipMaintain:Apply:edit')){ %>
-					actions.push('<a href="${ctx}/test/equipMaintainApply/form?equipid='+row.equipId+'" class="btnList" title="${text('报修')}"><i class="fa fa-wrench"></i></a>&nbsp;');
-				<% } %>
-                <% if(hasPermi('test:equipScrappedInfo:apply:edit')){ %>
-                     actions.push('<a href="${ctx}/test/equipScrappedInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('报废')}"><i class="fa fa-soccer-ball-o"></i></a>&nbsp;');
-                <% } %>
+					<% if(hasPermi('test:equipTransferInfo:apply:edit')){ %>
+							actions.push('<a href="${ctx}/test/equipTransferInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('调拨')}"><i class="fa fa-arrow-circle-left"></i></a>&nbsp;');
+					<% } %>
+					<% if(hasPermi('test:equipMaintain:Apply:edit')){ %>
+						actions.push('<a href="${ctx}/test/equipMaintainApply/form?equipid='+row.equipId+'" class="btnList" title="${text('报修')}"><i class="fa fa-wrench"></i></a>&nbsp;');
+					<% } %>
+					<% if(hasPermi('test:equipScrappedInfo:apply:edit')){ %>
+						 actions.push('<a href="${ctx}/test/equipScrappedInfo/form?equipid='+row.equipId+'" class="btnList" title="${text('报废')}"><i class="fa fa-soccer-ball-o"></i></a>&nbsp;');
+					<% } %>
+			    }
+
             <% } %>
 
 
