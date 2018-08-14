@@ -1,0 +1,235 @@
+<% layout('/layouts/default.html', {title: '点检计划管理', libs: ['validate','fileupload']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(checkPlans.isNewRecord ? '新增点检计划' : '编辑点检计划')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${checkPlans}" action="${ctx}/test/checkPlans/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4">${text('上级点检计划')}：</label>
+							<div class="col-sm-8">
+								<#form:treeselect id="parent" title="${text('上级点检计划')}"
+									path="parent.id" labelPath="parent.treeName"
+									url="${ctx}/test/checkPlans/treeData?excludeCode=${checkPlans.id}"
+									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required ">*</span> ${text('点检计划编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+
+								<#form:hidden path="isNewRecord"/>
+								<#form:input path="chackPlanCode" maxlength="64" readonly="${!checkPlans.isNewRecord}" class="form-control required abc"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('本级排序号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="treeSort" class="form-control digits"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('计划名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="treeName" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="equipCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检部位')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkPart" maxlength="50" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检内容')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkContent" maxlength="50" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检目标')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkGoal" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检周期')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkCycle" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检方法')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkMethod" maxlength="50" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检时设备运行状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="checkRunStatus" dictType="check_run_status" blankOption="true"  maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('点检员编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input:hidden path="checkerCode" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('点检时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input:hidden path="checkDate" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('扩展 String 1')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input:hidden path="extend.extendS1" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${checkPlans.id}" bizType="checkPlans_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${checkPlans.id}" bizType="checkPlans_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:checkPlans:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
+							$('#parentCode').val(), '${checkPlans.id}');
+				});
+			}
+		}, "json");
+    }
+});
+
+// 选择父级菜单回调方法
+function treeselectCallback(id, act, index, layero){
+	if (id == 'parent' && (act == 'ok' || act == 'clear')){
+		// 创建并初始化下一个节点信息，如：排序号、默认值
+		$.get('${ctx}/test/checkPlans/createNextNode?parentCode='
+				+$('#parentCode').val(), function(data){
+			$('#treeSort').val(data.treeSort);
+		});
+	}
+}
+</script>

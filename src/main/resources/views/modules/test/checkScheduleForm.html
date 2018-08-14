@@ -1,0 +1,163 @@
+<% layout('/layouts/default.html', {title: '点检安排管理', libs: ['validate','fileupload']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(checkSchedule.isNewRecord ? '新增点检安排' : '编辑点检安排')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${checkSchedule}" action="${ctx}/test/checkSchedule/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="chackScheduleCode"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检计划编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="chackPlanCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检计划名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="chackPlanName" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检员')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:treeselect id="checkerCode" title="${text('点检员')}"
+								path="checkerCode.userCode" labelPath="checkerCode.userName"
+								url="${ctx}/sys/office/treeData?isLoadUser=true"
+								class="" allowClear="true"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('点检完成情况')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select dictType="isFinish" blankOption="true" path="checkFinish" maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="" hidden="hidden">-->
+								<!--<span class="required hide">*</span> ${text('点检员')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input:hidden id="checkerCode" path="checkerCode.userName" maxlength="255" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkStartDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('结束时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="checkEndDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea:hidden path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('扩展 String 1')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input:hidden path="extend.extendS1" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${checkSchedule.id}" bizType="checkSchedule_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${checkSchedule.id}" bizType="checkSchedule_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:checkSchedule:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+</script>
