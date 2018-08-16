@@ -99,7 +99,9 @@ $('#dataGrid').dataGrid({
 		    return '<a href="${ctx}/test/checkSchedule/form?chackScheduleCode='+row.chackScheduleCode+'" class="btnList" data-title="${text('编辑点检安排')}">'+(val||row.id)+'</a>';
 		}},
        // {header:'${text('点检计划编号')}', name:'chackPlanCode', index:'a.chack_plan_code', width:150, align:"left"},
-		{header:'${text('点检计划')}', name:'chackPlanName', index:'a.chack_plan_name', width:150, align:"left"},
+		{header:'${text('点检计划')}', name:'chackPlanName', index:'a.chack_plan_name', width:150, align:"left", frozen:true, formatter:function(val, obj, row, act){
+                return '<a href="${ctx}/test/checkPlans/list?chackPlanCode='+row.chackPlanCode+'"  target = "_blank" class="btnList" data-title="${text('编辑点检安排')}">'+(val||row.id)+'</a>';
+         }},
 		//{header:'${text('点检员编号')}', name:'checkerCode.userCode', index:'a.checker_code', width:150, align:"left"},
 		{header:'${text('点检员')}', name:'checkerCode.userName', index:'', width:150, align:"left"},
 		{header:'${text('开始时间')}', name:'checkStartDate', index:'a.check_start_date', width:150, align:"center"},
@@ -130,4 +132,10 @@ $('#dataGrid').dataGrid({
 		
 	}
 });
+
+$(function () {
+    $('.ui-icon ui-icon-triangle-1-e tree-plus treeclick').onclick = function () {
+        alert("1");
+    }
+})
 </script>
