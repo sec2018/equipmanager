@@ -1,0 +1,186 @@
+<% layout('/layouts/default.html', {title: '巡检计划管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('巡检计划管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
+				<% if(hasPermi('test:inspectPlan:edit')){ %>
+					<a href="${ctx}/test/inspectPlan/form" class="btn btn-default btnTool" title="${text('新增巡检计划')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${inspectPlan}" action="${ctx}/test/inspectPlan/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检计划名称')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspectPlanName" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('计划名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="treeName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('巡检路径编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="inspecterRodeCode" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检路径名称')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspectRodeName" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label col-sm-4" title="">
+						<span class="required hide">*</span> ${text('巡检时间')}：<i class="fa icon-question hide"></i></label>
+					<div class="col-sm-8">
+						<#form:input path="inspectPlanDate" readonly="true" maxlength="60" class="form-control Wdate"
+						dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('巡检部位')}：</label>
+					<div class="control-inline">
+						<#form:input path="inspectPart" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检内容')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspectContent" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检目标')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspectGoal" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('巡检周期')}：</label>
+					<div class="control-inline width-120">
+						<!--<#form:input path="inspectCycle" maxlength="64" class="form-control width-120"/>-->
+						<#form:select path="inspectCycle" dictType="check_inspect_cycle" blankOption="true"  maxlength="64" class="form-control"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检方法')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspectMehod" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('巡检时设备运行状态')}：</label>
+					<div class="control-inline width-120" style="...">
+						<#form:select path="inspectRunStatus" dictType="check_run_status" blankOption="true"  maxlength="1" class="form-control"/>
+						<!--<#form:input path="inspectRunStatus" maxlength="1" class="form-control width-120"/>-->
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('巡检员编号')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="inspecterCode" maxlength="64" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('计划名称')}', name:'treeName', index:'a.tree_name', width:250, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			 if(row.inspectCycle == '0'){
+            	row.inspectCycle ="D";
+            }else if(row.inspectCycle == '1'){
+            	row.inspectCycle ="W";
+            }else if(row.inspectCycle == '2'){
+            	row.inspectCycle ="M";
+            }else{
+            	row.inspectCycle ="Y";
+            }
+			if(row.inspectRunStatus == '0'){
+			    row.inspectRunStatus = "运行中";
+            }else{
+				row.inspectRunStatus = "已停止";
+            }
+			return '( '+row.inspectPlanCode+' ) '+'<a href="${ctx}/test/inspectPlan/form?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" data-title="${text('编辑巡检计划')}">'+(val||row.id)+'</a>';
+		}},
+		//{header:'${text('巡检计划名称')}', name:'inspectPlanName', index:'a.inspect_plan_name', width:150, align:"left"},
+		//{header:'${text('本级排序号')}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"},
+		//{header:'${text('节点名称')}', name:'treeName', index:'a.tree_name', width:150, align:"left"},
+		{header:'${text('路径编号')}', name:'inspecterRodeCode', index:'a.inspecter_rode_code', width:120, align:"left"},
+		//{header:'${text('巡检路径名称')}', name:'inspectRodeName', index:'a.inspect_rode_name', width:150, align:"left"},
+		{header:'${text('设备编号')}', name:'equipInfo.equipId', index:'', width:120, align:"left"},
+		//{header:'${text('巡检时间')}', name:'inspectPlanDate', index:'a.inspect_plan_date', width:150, align:"center"},
+		{header:'${text('巡检部位')}', name:'inspectPart', index:'a.inspect_part', width:120, align:"left"},
+		{header:'${text('巡检内容')}', name:'inspectContent', index:'a.inspect_content', width:120, align:"left"},
+		{header:'${text('巡检目标')}', name:'inspectGoal', index:'a.inspect_goal', width:120, align:"left"},
+		{header:'${text('巡检周期')}', name:'inspectCycle', index:'a.inspect_cycle', width:120, align:"left"},
+		{header:'${text('巡检方法')}', name:'inspectMehod', index:'a.inspect_mehod', width:120, align:"left"},
+		{header:'${text('运行状态')}', name:'inspectRunStatus', index:'a.inspect_run_status', width:120, align:"left"},
+		//{header:'${text('巡检员编号')}', name:'inspecterCode', index:'a.inspecter_code', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		//{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:inspectPlan:edit')){ %>
+				actions.push('<a href="${ctx}/test/inspectPlan/form?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('编辑巡检计划')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				<!--if (row.status == Global.STATUS_NORMAL){-->
+					<!--actions.push('<a href="${ctx}/test/inspectPlan/disable?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('停用巡检计划')}" data-confirm="${text('确认要停用该巡检计划吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				<!--if (row.status == Global.STATUS_DISABLE){-->
+					<!--actions.push('<a href="${ctx}/test/inspectPlan/enable?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('启用巡检计划')}" data-confirm="${text('确认要启用该巡检计划吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				actions.push('<a href="${ctx}/test/inspectPlan/delete?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('删除巡检计划')}" data-confirm="${text('确认要删除该巡检计划及所有子巡检计划吗？')}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/inspectPlan/form?parentCode='+row.id+'" class="btnList" title="${text('新增下级巡检计划')}"><i class="fa fa-plus-square"></i></a>&nbsp;');
+				 <% if(hasPermi('test:inspectResult:edit')){ %>
+                actions.push('<a href="${ctx}/test/inspectResult/form?inspectPlanCode='+row.inspectPlanCode+'&opera=renote" class="btnList" title="${text('巡检结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
+                    <% } %>
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'inspectPlanName,treeName,inspecterRodeCode,inspectRodeName,inspectPlanDate,inspectPart,inspectContent,inspectGoal,inspectCycle,inspectMehod,inspectRunStatus,inspecterCode,status,remarks,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
