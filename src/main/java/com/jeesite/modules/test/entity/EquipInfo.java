@@ -41,6 +41,8 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="equip_status", attrName="equipStatus", label="设备状态", comment="设备状态（0-正常 1-报修 2-报废）"),
 		@Column(name="buy_time", attrName="buyTime", label="购置时间"),
 		@Column(name="equip_life", attrName="equipLife", label="设备使用年限"),
+		@Column(name="check_plan_code", attrName="checkPlanCode", label="点检计划编号"),
+		@Column(name="inspect_plan_code", attrName="inspectPlanCode", label="巡检计划编号"),
 		@Column(includeEntity=DataEntity.class),
 		@Column(name="del_flag", attrName="delFlag", label="删除标记"),
 	}, joinTable={
@@ -79,11 +81,19 @@ public class EquipInfo extends DataEntity<EquipInfo> {
 	private String equipStatus;		// 设备状态（0-正常 1-报修 2-报废）
 	private Date buyTime;		// 购置时间
 	private String equipLife;		// 设备使用年限
+	private String checkPlanCode;		// 点检计划编号
+	private String inspectPlanCode;		// 巡检计划编号
 	private String delFlag;		// 删除标记
-
 	private User testUser;		// 用户选择
 	private Office testOffice;		// 机构选择
 	private Employee employee; //员工（部门）数据
+	public String getCheckPlanCode() { return checkPlanCode; }
+
+	public void setCheckPlanCode(String checkPlanCode) { this.checkPlanCode = checkPlanCode; }
+
+	public String getInspectPlanCode() { return inspectPlanCode; }
+
+	public void setInspectPlanCode(String inspectPlanCode) { this.inspectPlanCode = inspectPlanCode; }
 
 	public Employee getEmployee() {
 		return employee;

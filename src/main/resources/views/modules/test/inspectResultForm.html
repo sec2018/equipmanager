@@ -1,0 +1,392 @@
+<% layout('/layouts/default.html', {title: '巡检结果管理', libs: ['validate','fileupload']}){ %>
+<%var user =  @UserUtils.getUser().getUserCode();%>
+<p id="user" hidden="hidden">${text(user)}</p>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header with-border">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text(inspectResult.isNewRecord ? '新增巡检结果' : '编辑巡检结果')}
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+			</div>
+		</div>
+		<#form:form id="inputForm" model="${inspectResult}" action="${ctx}/test/inspectResult/save" method="post" class="form-horizontal">
+			<div class="box-body">
+				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="inspectResultCode"/>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检计划编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="inspectPlanCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('巡检计划名称')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="inspectPlanName" maxlength="255" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<div class="row">
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('巡检员编号')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="inspecterCode" maxlength="64" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检开始时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="inspectStartDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检结束时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="inspectEndDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('巡检开始时间')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="inspectStartDate" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检结果描述')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="inspectResultDepict" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('巡检结果类型')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<!--<#form:input path="inspectResultType" maxlength="1" class="form-control"/>-->
+								<#form:select path="inspectResultType" dictType="check_result_status" blankOption="true"  maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('巡检工时')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="inspectHours" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('巡检结果图片')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="inspectResultImage" maxlength="255" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2" title="">
+								<span class="required hide">*</span> ${text('备注信息')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-10">
+								<#form:textarea path="remarks" rows="4" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<#form:input:hidden path="inspecterCode" maxlength="64" class="form-control"/>
+				<div class="form-unit">${text('扩展字段')}</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="" hidden="hidden">
+								<span class="required hide">*</span> ${text('扩展 String 1')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input:hidden path="extend.extendS1" maxlength="500" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 3')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS3" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 4')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS4" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 5')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS5" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 6')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS6" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 7')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS7" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 String 8')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendS8" maxlength="500" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Integer 1')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendI1" class="form-control digits"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Integer 2')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendI2" class="form-control digits"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Integer 3')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendI3" class="form-control digits"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Integer 4')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendI4" class="form-control digits"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Float 1')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendF1" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Float 2')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendF2" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Float 3')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendF3" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Float 4')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendF4" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Date 1')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendD1" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Date 2')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendD2" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Date 3')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendD3" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('扩展 Date 4')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="extend.extendD4" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('图片上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadImage" bizKey="${inspectResult.id}" bizType="inspectResult_image"
+									uploadType="image" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label class="control-label col-sm-2">${text('附件上传')}：</label>
+							<div class="col-sm-10">
+								<#form:fileupload id="uploadFile" bizKey="${inspectResult.id}" bizType="inspectResult_file"
+									uploadType="all" class="" readonly="false"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="row">
+					<div class="col-sm-offset-2 col-sm-10">
+						<% if (hasPermi('test:inspectResult:edit')){ %>
+							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
+						<% } %>
+						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
+					</div>
+				</div>
+			</div>
+		</#form:form>
+	</div>
+</div>
+<% } %>
+<script>
+var user = $('#user').html();//获取当前登录用户
+$('#inspecterCode').val(user);
+<!--$('#inspecterCode').attr("readOnly","readOnly");-->
+
+$("#inputForm").validate({
+	submitHandler: function(form){
+		js.ajaxSubmitForm($(form), function(data){
+			js.showMessage(data.message);
+			if(data.result == Global.TRUE){
+				js.closeCurrentTabPage(function(contentWindow){
+					contentWindow.page();
+				});
+			}
+		}, "json");
+    }
+});
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+
+$(function () {
+    $('#inspectPlanCode').val($.getUrlParam("inspectPlanCode"));
+    $('#inspectPlanCode').attr("readOnly","readOnly");
+});
+</script>
