@@ -142,9 +142,10 @@ $('#dataGrid').dataGrid({
 				// }
 				actions.push('<a href="${ctx}/test/checkPlans/delete?chackPlanCode='+row.chackPlanCode+'" class="btnList" title="${text('删除点检计划')}" data-confirm="${text('确认要删除该点检计划及所有子点检计划吗？')}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
 				actions.push('<a href="${ctx}/test/checkPlans/form?parentCode='+row.id+'" class="btnList" title="${text('新增下级点检计划')}"><i class="fa fa-plus-square"></i></a>&nbsp;');
-                <% if(hasPermi('test:checkResult:edit')){ %>
+             <% } %>
+             <!--<点检结果录入权限与点检计划编辑权限是相互独立的，点检结果录入权归点检员，计划编辑权归设备管理员>-->
+             <% if(hasPermi('test:checkResult:edit')){ %>
                 actions.push('<a href="${ctx}/test/checkResult/form?checkPlanCode='+row.chackPlanCode+'&opera=renote" class="btnList" title="${text('点检结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
-                    <% } %>
              <% } %>
 			return actions.join('');
 		}}

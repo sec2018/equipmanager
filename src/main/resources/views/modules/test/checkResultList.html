@@ -93,7 +93,7 @@ $('#dataGrid').dataGrid({
 			   row.checkStatus = "异常";
             }
             row.checkActualDate = row.checkActualDate.substring(0,16);
-		    return '<a href="${ctx}/test/checkResult/form?id='+row.id+'" class="btnList" data-title="${text('编辑点检结果')}">'+(val||row.id)+'</a>';
+		    return '<a href="${ctx}/test/checkResult/form?id='+row.id+'&checkPlanCode='+row.checkPlanCode+'" class="btnList" data-title="${text('编辑点检结果')}">'+(val||row.id)+'</a>';
 		}},
 		{header:'${text('点检计划名称')}', name:'checkPlanName', index:'a.check_plan_name', width:150, align:"left"},
 		{header:'${text('点检员')}', name:'testUser.userName', index:'', width:150, align:"left"},
