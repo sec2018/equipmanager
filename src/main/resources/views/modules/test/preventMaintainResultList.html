@@ -1,0 +1,137 @@
+<% layout('/layouts/default.html', {title: '维护结果管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('维护结果管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<!--<% if(hasPermi('test:preventMaintainResult:edit')){ %>-->
+					<!--<a href="${ctx}/test/preventMaintainResult/form" class="btn btn-default btnTool" title="${text('新增维护结果')}"><i class="fa fa-plus"></i> ${text('新增')}</a>-->
+				<!--<% } %>-->
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${preventMaintainResult}" action="${ctx}/test/preventMaintainResult/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('维护计划编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainPlanCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维护员编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainerCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-4" title="">
+						<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>
+					<div class="col-sm-8">
+						<#form:input path="maintainStartDate" readonly="true" maxlength="60" class="form-control Wdate"
+						dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-4" title="">
+						<span class="required hide">*</span> ${text('结束时间')}：<i class="fa icon-question hide"></i></label>
+					<div class="col-sm-8">
+						<#form:input path="maintianEndDate" readonly="true" maxlength="60" class="form-control Wdate"
+						dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维护工时')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintianHours" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('维护结果描述')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainResultDepict" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维护结果类型')}：</label>
+					<div class="control-inline width-120">
+						<!--<#form:input path="maintianResultType" maxlength="1" class="form-control width-120"/>-->
+						<#form:select path="maintianResultType" dictType="check_result_status" blankOption="true" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('维护计划编号')}', name:'maintainPlanCode', index:'a.maintain_plan_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			if(row.maintainResultType == '0'){
+				row.maintainResultType = "正常";
+            }else {
+			   row.maintainResultType = "异常";
+            }
+			return '<a href="${ctx}/test/preventMaintainResult/form?maintianResultCode='+row.maintianResultCode+'&maintainPlanCode='+row.maintainPlanCode+'" class="btnList" data-title="${text('编辑维护结果')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('维护计划名称')}', name:'preventMaintainPlan.miantianTreeName', index:'', width:150, align:"left"},
+		//{header:'${text('维护员编号')}', name:'maintainerCode', index:'a.maintainer_code', width:150, align:"left"},
+		{header:'${text('维护员姓名')}', name:'user.userName', index:'', width:150, align:"left"},
+		{header:'${text('维护开始时间')}', name:'maintainStartDate', index:'a.maintain_start_date', width:150, align:"center"},
+		{header:'${text('维护结束时间')}', name:'maintianEndDate', index:'a.maintian_end_date', width:150, align:"center"},
+		<!--{header:'${text('维护工时')}', name:'maintianHours', index:'a.maintian_hours', width:150, align:"right", formatter: function(val, obj, row, act){-->
+			<!--return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);-->
+		<!--}},-->
+		{header:'${text('维护结果描述')}', name:'maintainResultDepict', index:'a.maintain_result_depict', width:150, align:"left"},
+		{header:'${text('维护结果类型')}', name:'maintianResultType', index:'a.maintian_result_type', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:preventMaintainResult:edit')){ %>
+				actions.push('<a href="${ctx}/test/preventMaintainResult/form?maintianResultCode='+row.maintianResultCode+'&maintainPlanCode='+row.maintainPlanCode+'" class="btnList" title="${text('编辑维护结果')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				<!--if (row.status == Global.STATUS_NORMAL){-->
+					<!--actions.push('<a href="${ctx}/test/preventMaintainResult/disable?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('停用维护结果')}" data-confirm="${text('确认要停用该维护结果吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				<!--if (row.status == Global.STATUS_DISABLE){-->
+					<!--actions.push('<a href="${ctx}/test/preventMaintainResult/enable?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('启用维护结果')}" data-confirm="${text('确认要启用该维护结果吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				actions.push('<a href="${ctx}/test/preventMaintainResult/delete?maintianResultCode='+row.maintianResultCode+'&maintainPlanCode='+row.maintainPlanCode+'" class="btnList" title="${text('删除维护结果')}" data-confirm="${text('确认要删除该维护结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

@@ -1,0 +1,124 @@
+<% layout('/layouts/default.html', {title: '维护计划安排管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('维护计划安排管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:preventMaintianSchedule:edit')){ %>
+					<a href="${ctx}/test/preventMaintianSchedule/form" class="btn btn-default btnTool" title="${text('新增维护计划安排')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${preventMaintianSchedule}" action="${ctx}/test/preventMaintianSchedule/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('维护计划编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainPlanCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维护员编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="miantianerCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-4" title="">
+						<span class="required hide">*</span> ${text('维护时间')}：<i class="fa icon-question hide"></i></label>
+					<div class="col-sm-8">
+						<#form:input path="maintainDate" readonly="true" maxlength="60" class="form-control Wdate"
+						dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维护时间')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintainDate" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('维护完成状态')}：</label>
+					<div class="control-inline width-120">
+						<!--<#form:input path="maintainFinishStatus" maxlength="1" class="form-control width-120"/>-->
+						<#form:select path="maintainFinishStatus" dictType="isFinish" blankOption="true" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('维护安排编号')}', name:'maintainScheduleCode', index:'a.maintain_schedule_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			if(row.maintainFinishStatus == '0'){
+			    row.maintainFinishStatus = "未开始"
+            }
+			else if(row.maintainFinishStatus == '1') {
+			    row.maintainFinishStatus = "进行中"
+            }
+			else {
+			    row.maintainFinishStatus = "已完成"
+            }
+			return '<a href="${ctx}/test/preventMaintianSchedule/form?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" data-title="${text('编辑维护计划安排')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('计划名称')}', name:'preventMaintainPlan.miantianTreeName', index:'', width:150, align:"left", frozen:true, formatter:function(val, obj, row, act){
+                return '<a href="${ctx}/test/preventMaintainPlan/list?maintainPlanCode='+row.maintainPlanCode+'"  target = "_blank" class="btnList" data-title="${text('编辑维护安排')}">'+(val||row.id)+'</a>';
+         }},
+		//{header:'${text('维护员编号')}', name:'miantianerCode', index:'a.miantianer_code', width:150, align:"left"},
+		{header:'${text('维护员姓名')}', name:'user.userName', index:'', width:150, align:"left"},
+		{header:'${text('维护时间')}', name:'maintainDate', index:'a.maintain_date', width:150, align:"center"},
+		{header:'${text('维护完成状态')}', name:'maintainFinishStatus', index:'a.maintain_finish_status', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:preventMaintianSchedule:edit')){ %>
+				actions.push('<a href="${ctx}/test/preventMaintianSchedule/form?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" title="${text('编辑维护计划安排')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				<!--if (row.status == Global.STATUS_NORMAL){-->
+					<!--actions.push('<a href="${ctx}/test/preventMaintianSchedule/disable?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" title="${text('停用维护计划安排')}" data-confirm="${text('确认要停用该维护计划安排吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				<!--if (row.status == Global.STATUS_DISABLE){-->
+					<!--actions.push('<a href="${ctx}/test/preventMaintianSchedule/enable?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" title="${text('启用维护计划安排')}" data-confirm="${text('确认要启用该维护计划安排吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				actions.push('<a href="${ctx}/test/preventMaintianSchedule/delete?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" title="${text('删除维护计划安排')}" data-confirm="${text('确认要删除该维护计划安排吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

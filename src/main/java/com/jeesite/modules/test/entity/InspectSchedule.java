@@ -36,11 +36,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 				//@Column(name = "user_code", label = "用户编码", isPK = true),
 				@Column(name = "user_name", label = "用户名称", isQuery = false),
 		}),
-//		@JoinTable(type = Type.LEFT_JOIN, entity = Office.class, attrName = "office", alias = "u2",
-//				on = "u2.office_code = u1.user_name", columns = {
-//				@Column(name = "office_code", label = "机构编码", isPK = true),
-//				@Column(name = "office_name", label = "机构名称", isQuery = false),
-//		}),
 		@JoinTable(type = Type.LEFT_JOIN, entity = InspectPlan.class, attrName = "inspectPlan", alias = "p",
 				on = "p.inspect_plan_code = a.inspect_plan_code", columns = {
 				@Column(name = "tree_name", label = "节点名称", isQuery = true),

@@ -1,26 +1,27 @@
-<% layout('/layouts/default.html', {title: '巡检计划管理', libs: ['validate','fileupload']}){ %>
+<% layout('/layouts/default.html', {title: '维护结果管理', libs: ['validate','fileupload']}){ %>
+<%var user =  @UserUtils.getUser().getUserCode();%>
+<p id="user" hidden="hidden">${text(user)}</p>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(inspectPlan.isNewRecord ? '新增巡检计划' : '编辑巡检计划')}
+				<i class="fa fa-list-alt"></i> ${text(preventMaintainResult.isNewRecord ? '新增维护结果' : '编辑维护结果')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${inspectPlan}" action="${ctx}/test/inspectPlan/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${preventMaintainResult}" action="${ctx}/test/preventMaintainResult/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
+				<#form:hidden path="maintianResultCode"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
-							<label class="control-label col-sm-4">${text('上级巡检计划')}：</label>
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维护计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:treeselect id="parent" title="${text('上级巡检计划')}"
-									path="parent.id" labelPath="parent.treeName"
-									url="${ctx}/test/inspectPlan/treeData?excludeCode=${inspectPlan.id}"
-									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
+								<#form:input path="maintainPlanCode" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -29,162 +30,53 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required ">*</span> ${text('巡检计划编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维护开始时间')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-
-								<#form:hidden path="isNewRecord"/>
-								<#form:input path="inspectPlanCode" maxlength="64" readonly="${!inspectPlan.isNewRecord}" class="form-control required abc"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('本级排序号')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="treeSort" class="form-control digits"/>
-							</div>
-						</div>
-					</div>
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('巡检计划名称')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="inspectPlanName" maxlength="255" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检计划名称')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="treeName" maxlength="200" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检路径编号')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="inspecterRodeCode" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--<div class="row">-->
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('巡检路径编号')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="inspecterRodeCode" maxlength="255" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="" hidden="hidden">-->
-								<!--<span class="required hide">*</span> ${text('巡检路径名称')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input:hidden path="inspectRodeName" maxlength="255" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-				<!--</div>-->
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('计划巡检时间')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="inspectPlanDate" readonly="true" maxlength="60" class="form-control Wdate"
+								<#form:input path="maintainStartDate" readonly="true" maxlength="60" class="form-control Wdate"
 								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
 							</div>
 						</div>
 					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维护结束时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintianEndDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
 					<!--<div class="col-xs-6">-->
 						<!--<div class="form-group">-->
 							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('计划巡检时间')}：<i class="fa icon-question hide"></i></label>-->
+								<!--<span class="required hide">*</span> ${text('维护工时')}：<i class="fa icon-question hide"></i></label>-->
 							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="inspectPlanDate" maxlength="6" class="form-control"/>-->
+								<!--<#form:input path="maintianHours" class="form-control number"/>-->
 							<!--</div>-->
 						<!--</div>-->
 					<!--</div>-->
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检部位')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维护结果描述')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="inspectPart" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检内容')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="inspectContent" maxlength="255" class="form-control"/>
+								<#form:input path="maintainResultDepict" maxlength="255" class="form-control"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检目标')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维护结果类型')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="inspectGoal" maxlength="255" class="form-control"/>
+								<!--<#form:input path="maintianResultType" maxlength="1" class="form-control"/>-->
+								<#form:select path="maintianResultType" dictType="check_result_status" blankOption="true"  maxlength="255" class="form-control"/>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检周期')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="inspectCycle" maxlength="64" dictType="check_inspect_cycle" blankOption="true" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检方法')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="inspectMehod" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检时设备运行状态')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="inspectRunStatus" dictType="check_run_status" blankOption="true"  maxlength="1" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('巡检员编号')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="inspecterCode" maxlength="64" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
@@ -197,6 +89,7 @@
 						</div>
 					</div>
 				</div>
+				<#form:input:hidden path="maintainerCode" maxlength="64" class="form-control"/>
 				<div class="form-unit">${text('扩展字段')}</div>
 				<div class="row">
 					<div class="col-xs-6">
@@ -403,7 +296,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('图片上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadImage" bizKey="${inspectPlan.id}" bizType="inspectPlan_image"
+								<#form:fileupload id="uploadImage" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_image"
 									uploadType="image" class="" readonly="false"/>
 							</div>
 						</div>
@@ -414,7 +307,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${inspectPlan.id}" bizType="inspectPlan_file"
+								<#form:fileupload id="uploadFile" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_file"
 									uploadType="all" class="" readonly="false"/>
 							</div>
 						</div>
@@ -424,7 +317,7 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('test:inspectPlan:edit')){ %>
+						<% if (hasPermi('test:preventMaintainResult:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -436,30 +329,21 @@
 </div>
 <% } %>
 <script>
+var user = $('#user').html();//获取当前登录用户
+$('#maintainerCode').val(user);
+
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){
 			js.showMessage(data.message);
 			if(data.result == Global.TRUE){
 				js.closeCurrentTabPage(function(contentWindow){
-					contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
-							$('#parentCode').val(), '${inspectPlan.id}');
+					contentWindow.page();
 				});
 			}
 		}, "json");
     }
 });
-
-// 选择父级菜单回调方法
-function treeselectCallback(id, act, index, layero){
-	if (id == 'parent' && (act == 'ok' || act == 'clear')){
-		// 创建并初始化下一个节点信息，如：排序号、默认值
-		$.get('${ctx}/test/inspectPlan/createNextNode?parentCode='
-				+$('#parentCode').val(), function(data){
-			$('#treeSort').val(data.treeSort);
-		});
-	}
-}
 
 //获取url参数
 (function ($) {
@@ -471,8 +355,7 @@ function treeselectCallback(id, act, index, layero){
 })(jQuery);
 
 $(function () {
-    if($.getUrlParam("opera") == "renote"){
-        alert(1);
-    }
-})
+    $('#maintainPlanCode').val($.getUrlParam("maintainPlanCode"));
+    $('#maintainPlanCode').attr("readOnly","readOnly");
+});
 </script>
