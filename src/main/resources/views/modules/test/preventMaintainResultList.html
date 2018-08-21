@@ -124,7 +124,7 @@ $('#dataGrid').dataGrid({
 				<!--if (row.status == Global.STATUS_DISABLE){-->
 					<!--actions.push('<a href="${ctx}/test/preventMaintainResult/enable?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('启用维护结果')}" data-confirm="${text('确认要启用该维护结果吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
 				<!--}-->
-				actions.push('<a href="${ctx}/test/preventMaintainResult/delete?maintianResultCode='+row.maintianResultCode+'&maintainPlanCode='+row.maintainPlanCode+'" class="btnList" title="${text('删除维护结果')}" data-confirm="${text('确认要删除该维护结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/preventMaintainResult/delete?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('删除维护结果')}" data-confirm="${text('确认要删除该维护结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}

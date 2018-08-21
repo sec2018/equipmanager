@@ -1,0 +1,124 @@
+<% layout('/layouts/default.html', {title: '定修安排管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('定修安排管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('test:regularMaintainSchedule:edit')){ %>
+					<a href="${ctx}/test/regularMaintainSchedule/form" class="btn btn-default btnTool" title="${text('新增定修安排')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${regularMaintainSchedule}" action="${ctx}/test/regularMaintainSchedule/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('定修计划编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="regularPlanCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('定修计划名称')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="regularPlanName" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('定修员编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainerCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-4" title="">
+						<span class="required hide">*</span> ${text('维护时间')}：<i class="fa icon-question hide"></i></label>
+					<div class="col-sm-8">
+						<#form:input path="regularMaintainDate" readonly="true" maxlength="60" class="form-control Wdate"
+						dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('定修完成状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="regularFinishStatus" dictType="isFinish" blankOption="true" maxlength="1" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('定修安排编号')}', name:'regularScheduleCode', index:'a.regular_schedule_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			if(row.regularFinishStatus == '0'){
+			    row.regularFinishStatus = "未开始"
+            }
+			else if(row.regularFinishStatus == '1') {
+			    row.regularFinishStatus = "进行中"
+            }
+			else {
+			    row.regularFinishStatus = "已完成"
+            }
+			return '<a href="${ctx}/test/regularMaintainSchedule/form?regularScheduleCode='+row.regularScheduleCode+'" class="btnList" data-title="${text('编辑定修安排')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('定修计划名称')}', name:'regularMaintainPlan.regularTreeName', index:'', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/test/regularMaintainPlan/list?regularPlanCode='+row.regularPlanCode+'"  target = "_blank" class="btnList" data-title="${text('编辑定修安排')}">'+(val||row.id)+'</a>';
+		}},
+		//{header:'${text('定修计划名称')}', name:'regularPlanName', index:'a.regular_plan_name', width:150, align:"left"},
+		//{header:'${text('定修员编号')}', name:'maintainerCode', index:'a.maintainer_code', width:150, align:"left"},
+		{header:'${text('定修员姓名')}', name:'user.userName', index:'a.maintainer_code', width:150, align:"left"},
+		{header:'${text('定修时间')}', name:'regularMaintainDate', index:'a.regular_maintain_date', width:150, align:"center"},
+		{header:'${text('完成状态')}', name:'regularFinishStatus', index:'a.regular_finish_status', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:150, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:regularMaintainSchedule:edit')){ %>
+				actions.push('<a href="${ctx}/test/regularMaintainSchedule/form?regularScheduleCode='+row.regularScheduleCode+'" class="btnList" title="${text('编辑定修安排')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				<!--if (row.status == Global.STATUS_NORMAL){-->
+					<!--actions.push('<a href="${ctx}/test/regularMaintainSchedule/disable?regularScheduleCode='+row.regularScheduleCode+'" class="btnList" title="${text('停用定修安排')}" data-confirm="${text('确认要停用该定修安排吗？')}"><i class="glyphicon glyphicon-ban-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				<!--if (row.status == Global.STATUS_DISABLE){-->
+					<!--actions.push('<a href="${ctx}/test/regularMaintainSchedule/enable?regularScheduleCode='+row.regularScheduleCode+'" class="btnList" title="${text('启用定修安排')}" data-confirm="${text('确认要启用该定修安排吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
+				<!--}-->
+				actions.push('<a href="${ctx}/test/regularMaintainSchedule/delete?regularScheduleCode='+row.regularScheduleCode+'" class="btnList" title="${text('删除定修安排')}" data-confirm="${text('确认要删除该定修安排吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

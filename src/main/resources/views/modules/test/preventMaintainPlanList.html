@@ -30,12 +30,12 @@
 						<#form:input path="equipCode" maxlength="64" class="form-control width-120"/>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="control-label">${text('维护人员编号')}：</label>
-					<div class="control-inline">
-						<#form:input path="miantainerCode" maxlength="64" class="form-control width-120"/>
-					</div>
-				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维护人员编号')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="miantainerCode" maxlength="64" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
 				<div class="form-group">
 					<label class="control-label">${text('给油脂部位')}：</label>
 					<div class="control-inline">
@@ -189,7 +189,7 @@ $('#dataGrid').dataGrid({
 				actions.push('<a href="${ctx}/test/preventMaintainPlan/form?parentCode='+row.id+'" class="btnList" title="${text('新增下级预防性维护计划')}"><i class="fa fa-plus-square"></i></a>&nbsp;');
 			<% } %>
 			<!--<维护结果录入权限与维护计划编辑权限是相互独立的，维护结果录入权归维护员，计划编辑权归设备管理员>-->
-			 <% if(hasPermi('test:inspectResult:edit')){ %>
+			 <% if(hasPermi('test:preventMaintainResult:edit')){ %>
                 actions.push('<a href="${ctx}/test/preventMaintainResult/form?maintainPlanCode='+row.maintainPlanCode+'&opera=renote" class="btnList" title="${text('维护结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
              <% } %>
 			return actions.join('');

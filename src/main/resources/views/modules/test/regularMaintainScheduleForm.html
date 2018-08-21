@@ -1,79 +1,64 @@
-<% layout('/layouts/default.html', {title: '维护结果管理', libs: ['validate','fileupload']}){ %>
-<%var user =  @UserUtils.getUser().getUserCode();%>
-<p id="user" hidden="hidden">${text(user)}</p>
+<% layout('/layouts/default.html', {title: '定修安排管理', libs: ['validate','fileupload']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(preventMaintainResult.isNewRecord ? '新增维护结果' : '编辑维护结果')}
+				<i class="fa fa-list-alt"></i> ${text(regularMaintainSchedule.isNewRecord ? '新增定修安排' : '编辑定修安排')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${preventMaintainResult}" action="${ctx}/test/preventMaintainResult/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${regularMaintainSchedule}" action="${ctx}/test/regularMaintainSchedule/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="maintianResultCode"/>
+				<#form:hidden path="regularScheduleCode"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护计划编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('定修计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintainPlanCode" maxlength="64" class="form-control"/>
+								<#form:input path="regularPlanCode" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护开始时间')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="maintainStartDate" readonly="true" maxlength="60" class="form-control Wdate"
-								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结束时间')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="maintianEndDate" readonly="true" maxlength="60" class="form-control Wdate"
-								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
 					<!--<div class="col-xs-6">-->
 						<!--<div class="form-group">-->
 							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('维护工时')}：<i class="fa icon-question hide"></i></label>-->
+								<!--<span class="required hide">*</span> ${text('定修计划名称')}：<i class="fa icon-question hide"></i></label>-->
 							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="maintianHours" class="form-control number"/>-->
+								<!--<#form:input path="regularPlanName" maxlength="255" class="form-control"/>-->
 							<!--</div>-->
 						<!--</div>-->
 					<!--</div>-->
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结果描述')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('定修员编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintainResultDepict" maxlength="255" class="form-control"/>
+								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="regularMaintainDate" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结果类型')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('定修完成状态')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<!--<#form:input path="maintianResultType" maxlength="1" class="form-control"/>-->
-								<#form:select path="maintianResultType" dictType="check_result_status" blankOption="true"  maxlength="255" class="form-control"/>
+								<#form:select path="regularFinishStatus" dictType="isFinish" blankOption="true" maxlength="1" class="form-control width-120"/>
 							</div>
 						</div>
 					</div>
@@ -89,7 +74,6 @@
 						</div>
 					</div>
 				</div>
-				<#form:hidden path="maintainerCode" maxlength="64" class="form-control"/>
 				<div class="form-unit">${text('扩展字段')}</div>
 				<div class="row">
 					<div class="col-xs-6">
@@ -296,7 +280,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('图片上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadImage" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_image"
+								<#form:fileupload id="uploadImage" bizKey="${regularMaintainSchedule.id}" bizType="regularMaintainSchedule_image"
 									uploadType="image" class="" readonly="false"/>
 							</div>
 						</div>
@@ -307,7 +291,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_file"
+								<#form:fileupload id="uploadFile" bizKey="${regularMaintainSchedule.id}" bizType="regularMaintainSchedule_file"
 									uploadType="all" class="" readonly="false"/>
 							</div>
 						</div>
@@ -317,7 +301,7 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('test:preventMaintainResult:edit')){ %>
+						<% if (hasPermi('test:regularMaintainSchedule:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -329,9 +313,6 @@
 </div>
 <% } %>
 <script>
-var user = $('#user').html();//获取当前登录用户
-$('#maintainerCode').val(user);
-
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){
@@ -343,19 +324,5 @@ $("#inputForm").validate({
 			}
 		}, "json");
     }
-});
-
-//获取url参数
-(function ($) {
-    $.getUrlParam = function (name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return decodeURIComponent(r[2]); return null;
-    }
-})(jQuery);
-
-$(function () {
-    $('#maintainPlanCode').val($.getUrlParam("maintainPlanCode"));
-    $('#maintainPlanCode').attr("readOnly","readOnly");
 });
 </script>

@@ -128,7 +128,8 @@
 						</div>
 					</div>
 				</div>
-				<#form:input:hidden path="inspecterCode" maxlength="64" class="form-control"/>
+				<!--<此处不能加input标签，否则点检员编号不能存入数据库，导致获取不到点检员姓名>-->
+				<#form:hidden path="inspecterCode" maxlength="64" class="form-control"/>
 				<div class="form-unit">${text('扩展字段')}</div>
 				<div class="row">
 					<div class="col-xs-6">

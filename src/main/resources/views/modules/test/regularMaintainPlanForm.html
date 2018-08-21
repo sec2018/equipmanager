@@ -1,27 +1,26 @@
-<% layout('/layouts/default.html', {title: '维护结果管理', libs: ['validate','fileupload']}){ %>
-<%var user =  @UserUtils.getUser().getUserCode();%>
-<p id="user" hidden="hidden">${text(user)}</p>
+<% layout('/layouts/default.html', {title: '定修计划维护管理', libs: ['validate','fileupload']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(preventMaintainResult.isNewRecord ? '新增维护结果' : '编辑维护结果')}
+				<i class="fa fa-list-alt"></i> ${text(regularMaintainPlan.isNewRecord ? '新增定修计划维护' : '编辑定修计划维护')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${preventMaintainResult}" action="${ctx}/test/preventMaintainResult/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${regularMaintainPlan}" action="${ctx}/test/regularMaintainPlan/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="maintianResultCode"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护计划编号')}：<i class="fa icon-question hide"></i></label>
+							<label class="control-label col-sm-4">${text('上级定修计划维护')}：</label>
 							<div class="col-sm-8">
-								<#form:input path="maintainPlanCode" maxlength="64" class="form-control"/>
+								<#form:treeselect id="parent" title="${text('上级定修计划维护')}"
+									path="parent.id" labelPath="parent.regularTreeName"
+									url="${ctx}/test/regularMaintainPlan/treeData?excludeCode=${regularMaintainPlan.id}"
+									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
 					</div>
@@ -30,53 +29,103 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护开始时间')}：<i class="fa icon-question hide"></i></label>
+								<span class="required ">*</span> ${text('定修计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintainStartDate" readonly="true" maxlength="60" class="form-control Wdate"
-								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+
+								<#form:hidden path="isNewRecord"/>
+								<#form:input path="regularPlanCode" maxlength="64" readonly="${!regularMaintainPlan.isNewRecord}" class="form-control required abc"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结束时间')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('本级排序号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintianEndDate" readonly="true" maxlength="60" class="form-control Wdate"
-								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:MM',isShowClear:false});"/>
+								<#form:input path="treeSort" class="form-control digits"/>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修计划名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="regularTreeName" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="equipCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('备品备件编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="componentCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修部位')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="regularMaintainPart" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修内容')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="regularMaintainContent" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修目标')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="regularMaintainGoal" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('定修周期')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="regularMaintainCycle" dictType="regular_maintain_cycle" blankOption="true"  maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
 					<!--<div class="col-xs-6">-->
 						<!--<div class="form-group">-->
 							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('维护工时')}：<i class="fa icon-question hide"></i></label>-->
+								<!--<span class="required hide">*</span> ${text('定修员编号')}：<i class="fa icon-question hide"></i></label>-->
 							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="maintianHours" class="form-control number"/>-->
+								<!--<#form:input path="maintainerCode" maxlength="64" class="form-control"/>-->
 							<!--</div>-->
 						<!--</div>-->
 					<!--</div>-->
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结果描述')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="maintainResultDepict" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维护结果类型')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<!--<#form:input path="maintianResultType" maxlength="1" class="form-control"/>-->
-								<#form:select path="maintianResultType" dictType="check_result_status" blankOption="true"  maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
@@ -89,7 +138,6 @@
 						</div>
 					</div>
 				</div>
-				<#form:hidden path="maintainerCode" maxlength="64" class="form-control"/>
 				<div class="form-unit">${text('扩展字段')}</div>
 				<div class="row">
 					<div class="col-xs-6">
@@ -296,7 +344,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('图片上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadImage" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_image"
+								<#form:fileupload id="uploadImage" bizKey="${regularMaintainPlan.id}" bizType="regularMaintainPlan_image"
 									uploadType="image" class="" readonly="false"/>
 							</div>
 						</div>
@@ -307,7 +355,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${preventMaintainResult.id}" bizType="preventMaintainResult_file"
+								<#form:fileupload id="uploadFile" bizKey="${regularMaintainPlan.id}" bizType="regularMaintainPlan_file"
 									uploadType="all" class="" readonly="false"/>
 							</div>
 						</div>
@@ -317,7 +365,7 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('test:preventMaintainResult:edit')){ %>
+						<% if (hasPermi('test:regularMaintainPlan:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -329,21 +377,30 @@
 </div>
 <% } %>
 <script>
-var user = $('#user').html();//获取当前登录用户
-$('#maintainerCode').val(user);
-
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){
 			js.showMessage(data.message);
 			if(data.result == Global.TRUE){
 				js.closeCurrentTabPage(function(contentWindow){
-					contentWindow.page();
+					contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
+							$('#parentCode').val(), '${regularMaintainPlan.id}');
 				});
 			}
 		}, "json");
     }
 });
+
+// 选择父级菜单回调方法
+function treeselectCallback(id, act, index, layero){
+	if (id == 'parent' && (act == 'ok' || act == 'clear')){
+		// 创建并初始化下一个节点信息，如：排序号、默认值
+		$.get('${ctx}/test/regularMaintainPlan/createNextNode?parentCode='
+				+$('#parentCode').val(), function(data){
+			$('#treeSort').val(data.treeSort);
+		});
+	}
+}
 
 //获取url参数
 (function ($) {
@@ -355,7 +412,8 @@ $("#inputForm").validate({
 })(jQuery);
 
 $(function () {
-    $('#maintainPlanCode').val($.getUrlParam("maintainPlanCode"));
-    $('#maintainPlanCode').attr("readOnly","readOnly");
-});
+    if($.getUrlParam("opera") == "renote"){
+        alert(1);
+    }
+})
 </script>
