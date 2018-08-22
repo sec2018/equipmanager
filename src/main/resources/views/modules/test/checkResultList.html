@@ -95,7 +95,8 @@ $('#dataGrid').dataGrid({
             row.checkActualDate = row.checkActualDate.substring(0,16);
 		    return '<a href="${ctx}/test/checkResult/form?id='+row.id+'&checkPlanCode='+row.checkPlanCode+'" class="btnList" data-title="${text('编辑点检结果')}">'+(val||row.id)+'</a>';
 		}},
-		{header:'${text('点检计划名称')}', name:'checkPlanName', index:'a.check_plan_name', width:150, align:"left"},
+		//{header:'${text('点检计划名称')}', name:'checkPlanName', index:'a.check_plan_name', width:150, align:"left"},
+		{header:'${text('点检计划名称')}', name:'checkPlans.treeName', index:'', width:150, align:"left"},
 		{header:'${text('点检员')}', name:'testUser.userName', index:'', width:150, align:"left"},
 		{header:'${text('实际点检时间')}', name:'checkActualDate', index:'a.check_actual_date', width:180, align:"center"},
 		{header:'${text('点检工时')}', name:'checkHours', index:'a.check_hours', width:150, align:"right", formatter: function(val, obj, row, act){
@@ -119,6 +120,9 @@ $('#dataGrid').dataGrid({
 				// 	actions.push('<a href="${ctx}/test/checkResult/enable?id='+row.id+'" class="btnList" title="${text('启用点检结果')}" data-confirm="${text('确认要启用该点检结果吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');
 				// }
 				actions.push('<a href="${ctx}/test/checkResult/delete?id='+row.id+'&checkPlanCode='+row.checkPlanCode+'" class="btnList" title="${text('删除点检结果')}" data-confirm="${text('确认要删除该点检结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			<% if(hasPermi('test:troubleNotice:edit')){ %>
+				actions.push('<a href="${ctx}/test/troubleNotice/form?checkPlanCode='+row.checkPlanCode+'" class="btnList" title="${text('通知')}"><i class="fa fa-wrench"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}

@@ -151,6 +151,10 @@ $('#dataGrid').dataGrid({
 				<!--}-->
 				actions.push('<a href="${ctx}/test/inspectResult/delete?inspectResultCode='+row.inspectResultCode+'&inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('删除巡检结果')}" data-confirm="${text('确认要删除该巡检结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
+			<!--<故障通知权限与巡检结果编辑权限是相互独立的，故障通知权限归设备管理员所有，巡检结果编辑权限归维护人员所有>-->
+			<% if(hasPermi('test:troubleNotice:edit')){ %>
+				actions.push('<a href="${ctx}/test/troubleNotice/form?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('通知')}"><i class="fa fa-wrench"></i></a>&nbsp;');
+			<% } %>
 			return actions.join('');
 		}}
 	],

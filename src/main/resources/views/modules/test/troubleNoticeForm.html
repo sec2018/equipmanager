@@ -1,45 +1,34 @@
-<% layout('/layouts/default.html', {title: '巡检安排管理', libs: ['validate','fileupload']}){ %>
+<% layout('/layouts/default.html', {title: '故障通知单管理', libs: ['validate','fileupload']}){ %>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(inspectSchedule.isNewRecord ? '新增巡检安排' : '编辑巡检安排')}
+				<i class="fa fa-list-alt"></i> ${text(troubleNotice.isNewRecord ? '新增故障通知单' : '编辑故障通知单')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${inspectSchedule}" action="${ctx}/test/inspectSchedule/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${troubleNotice}" action="${ctx}/test/troubleNotice/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="inspectScheduleCode"/>
+				<#form:hidden path="noticeCode"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检计划编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('通知单类型')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="inspectPlanCode" maxlength="64" class="form-control"/>
+								<#form:select path="noticeType" dictType="notice_type" blankOption="true" maxlength="1" class="form-control"/>
 							</div>
 						</div>
 					</div>
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('巡检计划名称')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
-								<!--<#form:input path="inspectPlanName" maxlength="255" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-				</div>
-				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('巡检员编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('点巡检计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="inspecterCode" maxlength="64" class="form-control"/>
+								<#form:input path="planCode" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -48,9 +37,58 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('完成状态')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:select dictType="isFinish" blankOption="true" path="inspectFinishStatus" maxlength="1" class="form-control"/>
+								<#form:input path="equipCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('故障类型')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="troubleType" dictType="trouble_type" blankOption="true" maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('故障内容')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="troubleContent" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('通知单状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="noticeStatus" dictType="notice_status" blankOption="true" maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('故障级别')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="troubleLevel" dictType="trouble_level" blankOption="true" maxlength="1" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -73,7 +111,7 @@
 							<label class="control-label col-sm-4" title="" hidden="hidden">
 								<span class="required hide">*</span> ${text('扩展 String 1')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input:hidden path="extend.extendS1" maxlength="500" class="form-control"/>
+								<#form:input:hidden path="extend.extendS1" maxlength="11" class="form-control digits"/>
 							</div>
 						</div>
 					</div>
@@ -272,7 +310,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('图片上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadImage" bizKey="${inspectSchedule.id}" bizType="inspectSchedule_image"
+								<#form:fileupload id="uploadImage" bizKey="${troubleNotice.id}" bizType="troubleNotice_image"
 									uploadType="image" class="" readonly="false"/>
 							</div>
 						</div>
@@ -283,7 +321,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${inspectSchedule.id}" bizType="inspectSchedule_file"
+								<#form:fileupload id="uploadFile" bizKey="${troubleNotice.id}" bizType="troubleNotice_file"
 									uploadType="all" class="" readonly="false"/>
 							</div>
 						</div>
@@ -293,7 +331,7 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('test:inspectSchedule:edit')){ %>
+						<% if (hasPermi('test:troubleNotice:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -317,4 +355,24 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+if($.getUrlParam("inspectPlanCode")!=null){
+	$(function () {
+		$('#planCode').val($.getUrlParam("inspectPlanCode"));
+		$('#planCode').attr("readOnly","readOnly");
+	});
+}else{
+	$(function () {
+		$('#planCode').val($.getUrlParam("checkPlanCode"));
+		$('#planCode').attr("readOnly","readOnly");
+	});
+}
 </script>

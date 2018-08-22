@@ -172,7 +172,7 @@ $('#dataGrid').dataGrid({
 			<% } %>
 			<!--<巡检结果录入权限与巡检计划编辑权限是相互独立的，巡检结果录入权归巡检员，计划编辑权归设备管理员>-->
 			 <% if(hasPermi('test:inspectResult:edit')){ %>
-                actions.push('<a href="${ctx}/test/inspectResult/form?inspectPlanCode='+row.inspectPlanCode+'&opera=renote" class="btnList" title="${text('巡检结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
+                actions.push('<a href="${ctx}/test/inspectResult/form?inspectPlanCode='+row.inspectPlanCode+'" class="btnList" title="${text('巡检结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
              <% } %>
 			return actions.join('');
 		}}

@@ -35,7 +35,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(includeEntity=DataEntity.class),
 		@Column(includeEntity=Extend.class, attrName="extend"),
 	}, joinTable={
-		@JoinTable(type=Type.LEFT_JOIN, entity= CheckPlans.class, attrName="CheckPlans", alias="u10",
+		@JoinTable(type=Type.LEFT_JOIN, entity= CheckPlans.class, attrName="checkPlans", alias="u10",
 				on="u10.chack_plan_code = a.check_plan_code", columns={
 				@Column(name="tree_name", label="节点名称", isQuery=true),
 		}),
