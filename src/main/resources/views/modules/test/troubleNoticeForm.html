@@ -17,18 +17,18 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('通知单类型')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('点巡检计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:select path="noticeType" dictType="notice_type" blankOption="true" maxlength="1" class="form-control"/>
+								<#form:input path="planCode" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('点巡检计划编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('通知单类型')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="planCode" maxlength="64" class="form-control"/>
+								<#form:select path="noticeType" dictType="notice_type" blankOption="true" maxlength="1" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -46,9 +46,9 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('故障级别')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
+								<#form:select path="troubleLevel" dictType="trouble_level" blankOption="true" maxlength="1" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -74,6 +74,7 @@
 					</div>
 				</div>
 				<div class="row">
+					<%if(hasPermi('test:troubleNotice:status:view')){%>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -83,15 +84,18 @@
 							</div>
 						</div>
 					</div>
+					<%}%>
+					<%if(hasPermi('test:troubleNotice:assign:view')){%>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('故障级别')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:select path="troubleLevel" dictType="trouble_level" blankOption="true" maxlength="1" class="form-control"/>
+								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
 							</div>
 						</div>
 					</div>
+					<%}%>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
@@ -364,15 +368,39 @@ $("#inputForm").validate({
         if (r != null) return decodeURIComponent(r[2]); return null;
     }
 })(jQuery);
+<!--<如果是在点检或巡检结果界面点击故障通知，则自动获取点检或巡检计划编号，如果是在故障通知单界面点击编辑故障通知单，则自动获取对应的点巡检计划编号。>-->
+<!--<其中，inspectPlanCode绑定在inspectResultList.html的故障通知链接，checkPlanCode绑定在checkResultList.html的故障通知链接，planCode绑定在troubleNoticeList.html的编辑故障通知链接>-->
 if($.getUrlParam("inspectPlanCode")!=null){
 	$(function () {
 		$('#planCode').val($.getUrlParam("inspectPlanCode"));
 		$('#planCode').attr("readOnly","readOnly");
 	});
-}else{
+}else if($.getUrlParam("checkPlanCode")!=null){
 	$(function () {
 		$('#planCode').val($.getUrlParam("checkPlanCode"));
 		$('#planCode').attr("readOnly","readOnly");
 	});
+}else{
+	$('#planCode').val($.getUrlParam("planCode"));
 }
+
+//故障通知单状态为已指派，待承接、已承接时只能查看，不能编辑，但维修人员可以根据业务需要修改报修状态
+$(function () {
+    if($.getUrlParam("opera") == "view"){
+        $("#planCode").attr("readonly", "readonly");
+        $("#noticeType").attr("disabled",true);
+        $("#equipCode").attr("readonly", "readonly");
+        $("#maintainerCode").attr("readonly", "readonly");
+        $("#troubleType").attr("disabled",true);
+        $("#troubleContent").attr("disabled",true);
+        //$("#noticeStatus").attr("disabled",true);维修人员要根据业务修改报修状态，所有此处不能设为不可见
+        $("#troubleLevel").attr("disabled",true);
+        $("#remarks").attr("readonly", "readonly");
+        // $('#uploadImage').attr("readonly", "readonly");
+        // $('#uploadFile').attr("readonly", "readonly");
+        $(".webuploader-element-invisible").attr("disabled",true);
+        //$('#btnSubmit').hide();//隐藏提交按钮
+        // $('#back').show();
+    }
+});
 </script>

@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.test.entity;
 
+import com.jeesite.modules.sys.entity.User;
 import org.hibernate.validator.constraints.Length;
 import com.jeesite.common.entity.Extend;
 import java.util.Date;
@@ -32,7 +33,17 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="trouble_level", attrName="troubleLevel", label="故障级别", comment="故障级别（0-一般，1-严重，2-非常严重）"),
 		@Column(includeEntity=DataEntity.class),
 		@Column(includeEntity=Extend.class, attrName="extend"),
-	}, orderBy="a.update_date DESC"
+	}, joinTable= {
+		@JoinTable(type = Type.LEFT_JOIN, entity = User.class, attrName = "user", alias = "u",
+				on = "u.user_code = a.maintainer_code", columns = {
+				@Column(name = "user_name", label = "用户名称", isQuery = false),
+		}),
+//		<以下关联查询是想获取点巡检计划名称，但是点巡检计划编号分布在两个表中，操作不方便，暂时不予考虑>
+//		@JoinTable(type = Type.LEFT_JOIN, entity = InspectPlan.class, attrName = "inspectPlan", alias = "p",
+//				on = "p.inspect_plan_code = a.plan_code", columns = {
+//				@Column(name = "tree_name", label = "节点名称", isQuery = true),
+//		})
+}, orderBy="a.update_date DESC"
 )
 public class TroubleNotice extends DataEntity<TroubleNotice> {
 	
@@ -47,6 +58,21 @@ public class TroubleNotice extends DataEntity<TroubleNotice> {
 	private String noticeStatus;		// 通知单状态（0-待指派，1-已指派，2-待承接，3-已承接）
 	private String troubleLevel;		// 故障级别（0-一般，1-严重，2-非常严重）
 	private Extend extend;		// 扩展字段
+	private User user;
+
+	public InspectPlan getInspectPlan() {
+		return inspectPlan;
+	}
+
+	public void setInspectPlan(InspectPlan inspectPlan) {
+		this.inspectPlan = inspectPlan;
+	}
+
+	private InspectPlan inspectPlan;
+
+	public User getUser() { return user; }
+
+	public void setUser(User user) { this.user = user; }
 	
 	public TroubleNotice() {
 		this(null);

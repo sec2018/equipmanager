@@ -51,17 +51,24 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="user_code", label="用户编码", isPK=true),
 		@Column(name="user_name", label="用户名称", isQuery=false),
         }),
-		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="testOffice", alias="u11",
-				on="u11.office_code = a.dept_id", columns={
-				@Column(name="office_code", label="机构编码", isPK=true),
-				@Column(name="office_name", label="机构名称", isQuery=true),
-		}),
+//		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="testOffice", alias="u11",
+//				on="u11.office_code = a.dept_id", columns={
+//				@Column(name="office_code", label="机构编码", isPK=true),
+//				@Column(name="office_name", label="机构名称", isQuery=true),
+//		}),
+//		<通过下面的关联查询获取设备所属部门20180823>
 		@JoinTable(type=Type.LEFT_JOIN, entity= Employee.class, attrName="employee", alias="u12",
 				on="u12.emp_code = a.equip_manager_code", columns={
-				@Column(name="emp_code", label="员工编码", isPK=true),
+				//@Column(name="emp_code", label="员工编码", isPK=true),
 				@Column(name="office_code", label="机构名称", isQuery=true),
+				//@Column(name="office_name", label="机构名称", isQuery=true),
+		}),
+		@JoinTable(type=Type.LEFT_JOIN, entity= Office.class, attrName="testOffice", alias="u11",
+				on="u11.office_code = u12.office_code", columns={
+				//@Column(name="office_code", label="机构编码", isPK=true),
 				@Column(name="office_name", label="机构名称", isQuery=true),
 		})
+
 
 }, orderBy="a.update_date DESC"
 )

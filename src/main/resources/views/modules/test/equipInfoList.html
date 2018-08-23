@@ -155,7 +155,8 @@ $('#dataGrid').dataGrid({
 		    return '<a href="${ctx}/test/equipInfo/form?id='+row.id+'" class="btnList" data-title="${text('编辑equip_info')}">'+(val||row.id)+'</a>';
 		}},
 		//{header:'${text('设备管理员编号')}', name:'equipManagerCode', index:'a.equip_manager_code', width:150, align:"left"},
-		{header:'${text('设备管理员')}', name:'equipManager', index:'a.equip_manager', width:150, align:"left"},
+		//{header:'${text('设备管理员')}', name:'equipManager', index:'a.equip_manager', width:150, align:"left"},
+		{header:'${text('设备管理员')}', name:'testUser.userName', index:'', width:150, align:"left"},
 		{header:'${text('设备名称')}', name:'equipName', index:'a.equip_name', width:200, align:"left"},
 		{header:'${text('设备类型')}', name:'equipType', index:'a.equip_type', width:100, align:"left"},
 		//{header:'${text('设备型号')}', name:'equipModel', index:'a.equip_model', width:150, align:"left"},

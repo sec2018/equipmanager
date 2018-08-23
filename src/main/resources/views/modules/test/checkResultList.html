@@ -121,8 +121,8 @@ $('#dataGrid').dataGrid({
 				// }
 				actions.push('<a href="${ctx}/test/checkResult/delete?id='+row.id+'&checkPlanCode='+row.checkPlanCode+'" class="btnList" title="${text('删除点检结果')}" data-confirm="${text('确认要删除该点检结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
-			<% if(hasPermi('test:troubleNotice:edit')){ %>
-				actions.push('<a href="${ctx}/test/troubleNotice/form?checkPlanCode='+row.checkPlanCode+'" class="btnList" title="${text('通知')}"><i class="fa fa-wrench"></i></a>&nbsp;');
+			<% if(hasPermi('test:troubleNotice:notice')){ %>
+				actions.push('<a href="${ctx}/test/troubleNotice/form?checkPlanCode='+row.checkPlanCode+'" class="btnList" title="${text('点检故障通知')}"><i class="fa fa-wrench"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
