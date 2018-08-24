@@ -1,0 +1,227 @@
+<% layout('/layouts/default.html', {title: '维修工单库管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('维修工单库管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<a href="#" class="btn btn-default" id="btnRefreshTree" title="${text('刷新')}"><i class="fa fa-refresh"></i> ${text('刷新')}</a>
+				<a href="#" class="btn btn-default" id="btnExpandTreeNode" title="${text('展开一级')}"><i class="fa fa-angle-double-down"></i> ${text('展开')}</a>
+				<a href="#" class="btn btn-default" id="btnCollapseTreeNode" title="${text('折叠全部')}"><i class="fa fa-angle-double-up"></i> ${text('折叠')}</a>
+				<% if(hasPermi('test:maintainRecordTree:edit')){ %>
+					<a href="${ctx}/test/maintainRecordTree/form" class="btn btn-default btnTool" title="${text('新增维修工单库')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${maintainRecordTree}" action="${ctx}/test/maintainRecordTree/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('工单编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="recordCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('工单名称')}：</label>
+					<div class="control-inline">
+						<#form:input path="recordTreeName" maxlength="200" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('通知单编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="noticeCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维修员编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainerCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('设备编号')}：</label>
+					<div class="control-inline">
+						<#form:input path="equipCode" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('维修部位')}：</label>
+					<div class="control-inline">
+						<#form:input path="maintainPart" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备品备件编号')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="componentCode" maxlength="64" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备品备件名称')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="componentName" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备品备件数量')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="componentNumber" maxlength="11" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label col-sm-4" title="">-->
+						<!--<span class="required hide">*</span> ${text('开始时间')}：<i class="fa icon-question hide"></i></label>-->
+					<!--<div class="col-sm-8">-->
+						<!--<#form:input path="maintainStartTime" readonly="true" maxlength="60" class="form-control Wdate" dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label col-sm-4" title="">-->
+						<!--<span class="required hide">*</span> ${text('结束时间')}：<i class="fa icon-question hide"></i></label>-->
+					<!--<div class="col-sm-8">-->
+						<!--<#form:input path="maintainEndTime" readonly="true" maxlength="60" class="form-control Wdate" dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维修工时')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintainHours" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维修内容')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintainContent" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维修方法')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintainMethod" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维修时设备运行状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="maintainRunStatus" dictType="check_run_status" blankOption="true" maxlength="1" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('维修结果描述')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="maintainResultDepict" maxlength="255" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<label class="control-label">${text('维修结果类型')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="maintainResultType" dictType="regular_result_type" blankOption="true" maxlength="1" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('故障类型')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="troubleType" dictType="trouble_type" blankOption="true" maxlength="1" class="form-control"/>
+					</div>
+				</div>
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('状态')}：</label>-->
+					<!--<div class="control-inline width-120">-->
+						<!--<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="form-group">-->
+					<!--<label class="control-label">${text('备注信息')}：</label>-->
+					<!--<div class="control-inline">-->
+						<!--<#form:input path="remarks" maxlength="500" class="form-control width-120"/>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('工单名称')}', name:'recordTreeName', index:'a.record_tree_name', width:250, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			if(row.maintainRunStatus == '0'){
+			    row.maintainRunStatus = "运行中";
+            }else{
+				row.maintainRunStatus = "已停止";
+            }
+
+			if(row.maintainResultType == '0'){
+				row.maintainResultType = "成功";
+            }else {
+			   row.maintainResultType = "失败";
+            }
+
+            if(row.troubleType == '0'){
+				row.troubleType = "硬件";
+            }else {
+			   row.troubleType = "软件";
+            }
+
+			return '( '+row.recordCode+' ) '+'<a href="${ctx}/test/maintainRecordTree/form?id='+row.id+'" class="btnList" data-title="${text('编辑维修工单库')}">'+(val||row.id)+'</a>';
+		}},
+		//{header:'${text('工单编号')}', name:'recordCode', index:'a.record_code', width:150, align:"left"},
+		//{header:'${text('本级排序号')}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"},
+		//{header:'${text('工单节点名称')}', name:'recordTreeName', index:'a.record_tree_name', width:150, align:"left"},
+		{header:'${text('通知单编号')}', name:'noticeCode', index:'a.notice_code', width:120, align:"left"},
+		{header:'${text('维修员姓名')}', name:'user.userName', index:'', width:120, align:"left"},
+		//{header:'${text('维修员编号')}', name:'maintainerCode', index:'a.maintainer_code', width:120, align:"left"},
+		{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:120, align:"left"},
+		{header:'${text('维修部位')}', name:'maintainPart', index:'a.maintain_part', width:120, align:"left"},
+		{header:'${text('备件编号')}', name:'componentCode', index:'a.component_code', width:120, align:"left"},
+		{header:'${text('备件名称')}', name:'componentInfo.componentName', index:'', width:120, align:"left"},
+		{header:'${text('备件数量')}', name:'componentNumber', index:'a.component_number', width:120, align:"center"},
+		{header:'${text('开始时间')}', name:'maintainStartTime', index:'a.maintain_start_time', width:120, align:"center"},
+		{header:'${text('结束时间')}', name:'maintainEndTime', index:'a.maintain_end_time', width:120, align:"center"},
+		<!--{header:'${text('维修工时')}', name:'maintainHours', index:'a.maintain_hours', width:150, align:"right", formatter: function(val, obj, row, act){-->
+			<!--return js.formatNumber(val, 2, false, ''); // 数值类型格式化 (原始数值, 小数位数, 是否千分位, 默认值，金额情况下设置0.00);-->
+		<!--}},-->
+		//{header:'${text('维修内容')}', name:'maintainContent', index:'a.maintain_content', width:120, align:"left"},
+		{header:'${text('维修方法')}', name:'maintainMethod', index:'a.maintain_method', width:120, align:"left"},
+		//{header:'${text('运行状态')}', name:'maintainRunStatus', index:'a.maintain_run_status', width:150, align:"left"},
+		//{header:'${text('结果描述')}', name:'maintainResultDepict', index:'a.maintain_result_depict', width:150, align:"left"},
+		//{header:'${text('结果类型')}', name:'maintainResultType', index:'a.maintain_result_type', width:150, align:"left"},
+		//{header:'${text('故障类型')}', name:'troubleType', index:'a.trouble_type', width:150, align:"left"},
+		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
+			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
+		<!--}},-->
+		//{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('备注信息')}', name:'remarks', index:'a.remarks', width:120, align:"left"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('test:maintainRecordTree:edit')){ %>
+				actions.push('<a href="${ctx}/test/maintainRecordTree/form?id='+row.id+'&recordCode='+row.recordCode+'" class="btnList" title="${text('编辑维修工单库')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/maintainRecordTree/delete?id='+row.id+'" class="btnList" title="${text('删除维修工单库')}" data-confirm="${text('确认要删除该维修工单库及所有子维修工单库吗？')}" data-deltreenode="'+row.id+'"><i class="fa fa-trash-o"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/test/maintainRecordTree/form?parentCode='+row.id+'" class="btnList" title="${text('新增下级维修工单库')}"><i class="fa fa-plus-square"></i></a>&nbsp;');
+			<% } %>
+			<!--<系统其他人员只能查看维修工单>-->
+			<% if(hasPermi('test:maintainRecordTree:scan')){ %>
+				actions.push('<a href="${ctx}/test/maintainRecordTree/form?id='+row.id+'&opera=view" class="btnList" title="${text('查看工单')}"><i class="fa fa-eye"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	treeGrid: true,			// 启用树结构表格
+	defaultExpandLevel: 0,	// 默认展开的层次
+	expandNodeClearPostData: 'recordCode,recordTreeName,noticeCode,maintainerCode,equipCode,maintainPart,componentCode,componentName,componentNumber,maintainStartTime,maintainEndTime,maintainHours,maintainContent,maintainMethod,maintainRunStatus,maintainResultDepict,maintainResultType,troubleType,status,remarks,', // 展开节点清理请求参数数据（一般设置查询条件的字段属性，否则在查询后，不能展开子节点数据）	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>

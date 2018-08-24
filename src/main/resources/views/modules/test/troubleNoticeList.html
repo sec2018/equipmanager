@@ -22,8 +22,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">${text('点巡检计划编号')}：</label>
+					<label class="control-label">${text('故障类型编号')}：</label>
 					<div class="control-inline">
+						<!--<最初考虑将该编号设置为点巡检异常编号，后考虑把事故异常编号也加进来，所以最终改为故障类型编号>-->
 						<#form:input path="planCode" maxlength="64" class="form-control width-120"/>
 					</div>
 				</div>
@@ -91,7 +92,7 @@
 $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
-		{header:'${text('点巡检计划编号')}', name:'planCode', index:'a.plan_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+		{header:'${text('故障类型编号')}', name:'planCode', index:'a.plan_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
 			 if(row.troubleType == '0'){
 				row.troubleType = "硬件";
             }else {
@@ -123,6 +124,7 @@ $('#dataGrid').dataGrid({
 				 return '<a href="${ctx}/test/inspectPlan/list?planCode='+row.planCode+'"  target = "_blank" class="btnList" data-title="${text('编辑巡检计划')}">'+(val||row.id)+'</a>';
             }else {
 			   row.noticeType = "事故";
+			   return '<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'" class="btnList" data-title="${text('编辑故障通知单')}">'+(val||row.id)+'</a>';
             }
             <!--<下面这种方式也是想实现根据通知单类型类跳转到相应的计划维护界面，但是前段都显示的是点检异常>-->
             <!--if(row.noticeType = "点检异常"){-->
@@ -140,7 +142,7 @@ $('#dataGrid').dataGrid({
 		//{header:'${text('点巡检计划编号')}', name:'planCode', index:'a.plan_code', width:150, align:"left"},
 		//{header:'${text('点巡检计划名称')}', name:'inspectPlan.treeName', index:'', width:150, align:"left"},
 		{header:'${text('通知单类型')}', name:'noticeType', index:'a.notice_type', width:150, align:"left"},
-		//{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:150, align:"left"},
+		{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:150, align:"left"},
 		//{header:'${text('维修人员编号')}', name:'maintainerCode', index:'a.maintainer_code', width:150, align:"left"},
 		{header:'${text('维修人员姓名')}', name:'user.userName', index:'', width:150, align:"left"},
 		{header:'${text('故障类型')}', name:'troubleType', index:'a.trouble_type', width:150, align:"left"},

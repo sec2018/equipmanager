@@ -1,38 +1,83 @@
-<% layout('/layouts/default.html', {title: '故障通知单管理', libs: ['validate','fileupload']}){ %>
+<% layout('/layouts/default.html', {title: '维修工单库管理', libs: ['validate','fileupload']}){ %>
+<%var user = @UserUtils.getUser().getUserCode();%>
+<p id="user" hidden="hidden">${text(user)}</p>
 <div class="main-content">
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
-				<i class="fa fa-list-alt"></i> ${text(troubleNotice.isNewRecord ? '新增故障通知单' : '编辑故障通知单')}
+				<i class="fa fa-list-alt"></i> ${text(maintainRecordTree.isNewRecord ? '新增维修工单库' : '编辑维修工单库')}
 			</div>
 			<div class="box-tools pull-right">
 				<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 			</div>
 		</div>
-		<#form:form id="inputForm" model="${troubleNotice}" action="${ctx}/test/troubleNotice/save" method="post" class="form-horizontal">
+		<#form:form id="inputForm" model="${maintainRecordTree}" action="${ctx}/test/maintainRecordTree/save" method="post" class="form-horizontal">
 			<div class="box-body">
 				<div class="form-unit">${text('基本信息')}</div>
-				<#form:hidden path="noticeCode"/>
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('故障类型编号')}：<i class="fa icon-question hide"></i></label>
+							<label class="control-label col-sm-4">${text('上级维修工单')}：</label>
 							<div class="col-sm-8">
-								<#form:input path="planCode" maxlength="64" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('通知单类型')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="noticeType" dictType="notice_type" blankOption="true" maxlength="1" class="form-control"/>
+								<#form:treeselect id="parent" title="${text('上级维修工单')}"
+									path="parent.id" labelPath="parent.recordTreeName"
+									url="${ctx}/test/maintainRecordTree/treeData?excludeCode=${maintainRecordTree.id}"
+									class="" allowClear="true" canSelectRoot="true" canSelectParent="true"/>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('工单编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="recordCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('本级排序号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="treeSort" class="form-control digits"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('工单名称')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="recordTreeName" maxlength="200" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('通知单编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="noticeCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="maintainerCode" maxlength="64" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="form-group">
@@ -46,14 +91,125 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('故障级别')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维修部位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:select path="troubleLevel" dictType="trouble_level" blankOption="true" maxlength="1" class="form-control"/>
+								<#form:input path="maintainPart" maxlength="255" class="form-control"/>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('备品备件编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="componentCode" maxlength="64" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('备品备件数量')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="componentNumber" maxlength="11" class="form-control digits"/>
+							</div>
+						</div>
+					</div>
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('备品备件名称')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="componentName" maxlength="255" class="form-control"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修开始时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainStartTime" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修结束时间')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainEndTime" readonly="true" maxlength="60" class="form-control Wdate"
+								dataFormat="date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="row">-->
+					<!--<div class="col-xs-6">-->
+						<!--<div class="form-group">-->
+							<!--<label class="control-label col-sm-4" title="">-->
+								<!--<span class="required hide">*</span> ${text('维修工时')}：<i class="fa icon-question hide"></i></label>-->
+							<!--<div class="col-sm-8">-->
+								<!--<#form:input path="maintainHours" class="form-control number"/>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修内容')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainContent" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修方法')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainMethod" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修时设备运行状态')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="maintainRunStatus" dictType="check_run_status" blankOption="true" maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修结果描述')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:input path="maintainResultDepict" maxlength="255" class="form-control"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('维修结果类型')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
+								<#form:select path="maintainResultType" dictType="regular_result_type" blankOption="true" maxlength="1" class="form-control"/>
+							</div>
+						</div>
+					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
@@ -63,40 +219,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('故障内容')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="troubleContent" maxlength="255" class="form-control"/>
-							</div>
-						</div>
-					</div>
 				</div>
-				<div class="row">
-					<%if(hasPermi('test:troubleNotice:status:view')){%>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('通知单状态')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:select path="noticeStatus" dictType="notice_status" blankOption="true" maxlength="1" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<%}%>
-					<%if(hasPermi('test:troubleNotice:assign:view')){%>
-					<div class="col-xs-6">
-						<div class="form-group">
-							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>
-							<div class="col-sm-8">
-								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
-							</div>
-						</div>
-					</div>
-					<%}%>
-				</div>
+				<#form:hidden path="maintainerCode" maxlength="64" class="form-control"/>
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="form-group">
@@ -314,7 +438,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('图片上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadImage" bizKey="${troubleNotice.id}" bizType="troubleNotice_image"
+								<#form:fileupload id="uploadImage" bizKey="${maintainRecordTree.id}" bizType="maintainRecordTree_image"
 									uploadType="image" class="" readonly="false"/>
 							</div>
 						</div>
@@ -325,7 +449,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2">${text('附件上传')}：</label>
 							<div class="col-sm-10">
-								<#form:fileupload id="uploadFile" bizKey="${troubleNotice.id}" bizType="troubleNotice_file"
+								<#form:fileupload id="uploadFile" bizKey="${maintainRecordTree.id}" bizType="maintainRecordTree_file"
 									uploadType="all" class="" readonly="false"/>
 							</div>
 						</div>
@@ -335,7 +459,7 @@
 			<div class="box-footer">
 				<div class="row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<% if (hasPermi('test:troubleNotice:edit')){ %>
+						<% if (hasPermi('test:maintainRecordTree:edit')){ %>
 							<button type="submit" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> ${text('保 存')}</button>&nbsp;
 						<% } %>
 						<button type="button" class="btn btn-sm btn-default" id="btnCancel" onclick="js.closeCurrentTabPage()"><i class="fa fa-reply-all"></i> ${text('关 闭')}</button>
@@ -347,18 +471,33 @@
 </div>
 <% } %>
 <script>
+var user = $('#user').html();//获取当前登录用户
+$('#maintainerCode').val(user);
+
 $("#inputForm").validate({
 	submitHandler: function(form){
 		js.ajaxSubmitForm($(form), function(data){
 			js.showMessage(data.message);
 			if(data.result == Global.TRUE){
 				js.closeCurrentTabPage(function(contentWindow){
-					contentWindow.page();
+					contentWindow.$('#dataGrid').dataGrid('refreshTreeChildren',
+							$('#parentCode').val(), '${maintainRecordTree.id}');
 				});
 			}
 		}, "json");
     }
 });
+
+// 选择父级菜单回调方法
+function treeselectCallback(id, act, index, layero){
+	if (id == 'parent' && (act == 'ok' || act == 'clear')){
+		// 创建并初始化下一个节点信息，如：排序号、默认值
+		$.get('${ctx}/test/maintainRecordTree/createNextNode?parentCode='
+				+$('#parentCode').val(), function(data){
+			$('#treeSort').val(data.treeSort);
+		});
+	}
+}
 
 //获取url参数
 (function ($) {
@@ -368,39 +507,32 @@ $("#inputForm").validate({
         if (r != null) return decodeURIComponent(r[2]); return null;
     }
 })(jQuery);
-<!--<如果是在点检或巡检结果界面点击故障通知，则自动获取点检或巡检计划编号，如果是在故障通知单界面点击编辑故障通知单，则自动获取对应的点巡检计划编号。>-->
-<!--<其中，inspectPlanCode绑定在inspectResultList.html的故障通知链接，checkPlanCode绑定在checkResultList.html的故障通知链接，planCode绑定在troubleNoticeList.html的编辑故障通知链接>-->
-if($.getUrlParam("inspectPlanCode")!=null){
-	$(function () {
-		$('#planCode').val($.getUrlParam("inspectPlanCode"));
-		$('#planCode').attr("readOnly","readOnly");
-	});
-}else if($.getUrlParam("checkPlanCode")!=null){
-	$(function () {
-		$('#planCode').val($.getUrlParam("checkPlanCode"));
-		$('#planCode').attr("readOnly","readOnly");
-	});
-}else{
-	$('#planCode').val($.getUrlParam("planCode"));
-}
 
-//故障通知单状态为已指派，待承接、已承接时只能查看，不能编辑，但维修人员可以根据业务需要修改报修状态
+//除维修人员外，其他人员只能查看维修工单，不能编辑
 $(function () {
     if($.getUrlParam("opera") == "view"){
-        $("#planCode").attr("readonly", "readonly");
-        $("#noticeType").attr("disabled",true);
+        //$("#parent.id").attr("disabled",true);
+        $("#recordCode").attr("readonly", "readonly");
+        $("#treeSort").attr("readonly", "readonly");
+        $("#recordTreeName").attr("readonly", "readonly");
+        $("#noticeCode").attr("readonly", "readonly");
         $("#equipCode").attr("readonly", "readonly");
-        $("#maintainerCode").attr("readonly", "readonly");
+        $("#maintainPart").attr("readonly", "readonly");
+        $("#componentCode").attr("readonly", "readonly");
+        $("#componentNumber").attr("readonly", "readonly");
+        $("#maintainStartTime").attr("disabled",true);
+        $("#maintainEndTime").attr("disabled",true);
+        $("#maintainContent").attr("disabled",true);
+        $("#maintainMethod").attr("readonly", "readonly");
+        $("#maintainResultDepict").attr("readonly", "readonly");
+        $("#maintainRunStatus").attr("disabled",true);
+        $("#maintainResultType").attr("disabled",true);
         $("#troubleType").attr("disabled",true);
-        $("#troubleContent").attr("disabled",true);
-        //$("#noticeStatus").attr("disabled",true);维修人员要根据业务修改报修状态，所有此处不能设为不可见
-        $("#troubleLevel").attr("disabled",true);
         $("#remarks").attr("readonly", "readonly");
-        // $('#uploadImage').attr("readonly", "readonly");
-        // $('#uploadFile').attr("readonly", "readonly");
+        $('#uploadImage').attr("disabled",true);
+        $('#uploadFile').attr("disabled",true);
         $(".webuploader-element-invisible").attr("disabled",true);
-        //$('#btnSubmit').hide();//隐藏提交按钮
-        // $('#back').show();
+        $('#btnSubmit').hide();//隐藏提交按钮
     }
 });
 </script>
