@@ -24,7 +24,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 @Table(name="prevent_maintian_schedule", alias="a", columns={
 		@Column(name="maintain_schedule_code", attrName="maintainScheduleCode", label="维护安排编号", isPK=true),
 		@Column(name="maintain_plan_code", attrName="maintainPlanCode", label="维护计划编号"),
-		@Column(name="miantianer_code", attrName="miantianerCode", label="维护员编号"),
+		@Column(name="miantianer_code", attrName="user.userCode", label="维护员编号"),//通过搜索框来选择预防性维护人员
 		@Column(name="maintain_date", attrName="maintainDate", label="维护时间"),
 		@Column(name="maintain_finish_status", attrName="maintainFinishStatus", label="维护完成状态", comment="维护完成状态（0-未完成  1-已完成）"),
 		@Column(includeEntity=DataEntity.class),
@@ -32,7 +32,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 	}, joinTable= {
 		@JoinTable(type = Type.LEFT_JOIN, entity = User.class, attrName = "user", alias = "u1",
 				on = "u1.user_code = a.miantianer_code", columns = {
-				//@Column(name = "user_code", label = "用户编码", isPK = true),
 				@Column(name = "user_name", label = "用户名称", isQuery = false),
 		}),
 		@JoinTable(type = Type.LEFT_JOIN, entity = PreventMaintainPlan.class, attrName = "preventMaintainPlan", alias = "p",

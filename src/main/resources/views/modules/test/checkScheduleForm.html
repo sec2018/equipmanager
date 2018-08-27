@@ -160,4 +160,29 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+//维修人员只能查看点检计划安排，不能编辑
+$(function () {
+    if($.getUrlParam("opera") == "view"){
+        $("#chackPlanCode").attr("readonly", "readonly");
+        $("#chackPlanName").attr("readonly", "readonly");
+        $("#checkerCode").attr("readonly", "readonly");
+        $("#checkFinish").attr("disabled",true);
+        $("#checkStartDate").attr("disabled",true);
+        $("#checkEndDate").attr("disabled",true);
+        $("#remarks").attr("readonly", "readonly");
+        $('#uploadImage').attr("disabled",true);
+        $('#uploadFile').attr("disabled",true);
+        $(".webuploader-element-invisible").attr("disabled",true);
+        $('#btnSubmit').hide();//隐藏提交按钮
+    }
+});
 </script>

@@ -124,6 +124,10 @@ $('#dataGrid').dataGrid({
 				// }
 				actions.push('<a href="${ctx}/test/checkSchedule/delete?chackScheduleCode='+row.chackScheduleCode+'" class="btnList" title="${text('删除点检安排')}" data-confirm="${text('确认要删除该点检安排吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
+			<!--<维修人员只能查看点检计划安排>-->
+			<% if(hasPermi('test:checkSchedule:scan')){ %>
+				actions.push('<a href="${ctx}/test/checkSchedule/form?chackScheduleCode='+row.chackScheduleCode+'&opera=view" class="btnList" title="${text('查看点检计划安排')}"><i class="fa fa-eye"></i></a>&nbsp;');
+			<% } %>
 			return actions.join('');
 		}}
 	],

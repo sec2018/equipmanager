@@ -113,6 +113,10 @@ $('#dataGrid').dataGrid({
 				<!--}-->
 				actions.push('<a href="${ctx}/test/preventMaintianSchedule/delete?maintainScheduleCode='+row.maintainScheduleCode+'" class="btnList" title="${text('删除维护计划安排')}" data-confirm="${text('确认要删除该维护计划安排吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
+				<!--<维修人员只能查看预防性维护计划安排>-->
+			<% if(hasPermi('test:preventMaintianSchedule:scan')){ %>
+				actions.push('<a href="${ctx}/test/preventMaintianSchedule/form?maintainScheduleCode='+row.maintainScheduleCode+'&opera=view" class="btnList" title="${text('查看预防性维护计划安排')}"><i class="fa fa-eye"></i></a>&nbsp;');
+			<% } %>
 			return actions.join('');
 		}}
 	],

@@ -26,7 +26,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="notice_type", attrName="noticeType", label="通知单类型", comment="通知单类型（0-点检异常，1-巡检异常，2-事故）"),
 		@Column(name="plan_code", attrName="planCode", label="点巡检计划编号"),
 		@Column(name="equip_code", attrName="equipCode", label="设备编号"),
-		@Column(name="maintainer_code", attrName="maintainerCode", label="维修人员编号"),
+		@Column(name="maintainer_code", attrName="user.userCode", label="维修人员编号"),//通过搜索框来选择维修人员
 		@Column(name="trouble_type", attrName="troubleType", label="故障类型", comment="故障类型（0-硬件，1-软件）"),
 		@Column(name="trouble_content", attrName="troubleContent", label="故障内容"),
 		@Column(name="notice_status", attrName="noticeStatus", label="通知单状态", comment="通知单状态（0-待指派，1-已指派，2-待承接，3-已承接）"),

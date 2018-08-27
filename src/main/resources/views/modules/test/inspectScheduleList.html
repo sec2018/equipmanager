@@ -107,6 +107,10 @@ $('#dataGrid').dataGrid({
 				<!--}-->
 				actions.push('<a href="${ctx}/test/inspectSchedule/delete?inspectScheduleCode='+row.inspectScheduleCode+'" class="btnList" title="${text('删除巡检安排')}" data-confirm="${text('确认要删除该巡检安排吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 			<% } %>
+			<!--<维修人员只能查看巡检计划安排>-->
+			<% if(hasPermi('test:inspectSchedule:scan')){ %>
+				actions.push('<a href="${ctx}/test/inspectSchedule/form?inspectScheduleCode='+row.inspectScheduleCode+'&opera=view" class="btnList" title="${text('查看巡检计划安排')}"><i class="fa fa-eye"></i></a>&nbsp;');
+			<% } %>
 			return actions.join('');
 		}}
 	],

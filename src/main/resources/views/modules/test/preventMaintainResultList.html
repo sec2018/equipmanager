@@ -92,10 +92,10 @@ $('#dataGrid').dataGrid({
 	searchForm: $("#searchForm"),
 	columnModel: [
 		{header:'${text('维护计划编号')}', name:'maintainPlanCode', index:'a.maintain_plan_code', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
-			if(row.maintainResultType == '0'){
-				row.maintainResultType = "正常";
+			if(row.maintianResultType == '0'){
+				row.maintianResultType = "正常";
             }else {
-			   row.maintainResultType = "异常";
+			   row.maintianResultType = "异常";
             }
 			return '<a href="${ctx}/test/preventMaintainResult/form?maintianResultCode='+row.maintianResultCode+'&maintainPlanCode='+row.maintainPlanCode+'" class="btnList" data-title="${text('编辑维护结果')}">'+(val||row.id)+'</a>';
 		}},
@@ -125,6 +125,10 @@ $('#dataGrid').dataGrid({
 					<!--actions.push('<a href="${ctx}/test/preventMaintainResult/enable?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('启用维护结果')}" data-confirm="${text('确认要启用该维护结果吗？')}"><i class="glyphicon glyphicon-ok-circle"></i></a>&nbsp;');-->
 				<!--}-->
 				actions.push('<a href="${ctx}/test/preventMaintainResult/delete?maintianResultCode='+row.maintianResultCode+'" class="btnList" title="${text('删除维护结果')}" data-confirm="${text('确认要删除该维护结果吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			<!--<故障通知权限与预防性维护结果编辑权限是相互独立的，故障通知权限归设备管理员所有，维护结果编辑权限归维护人员所有>-->
+			<% if(hasPermi('test:troubleNotice:notice')){ %>
+				actions.push('<a href="${ctx}/test/troubleNotice/form?maintainPlanCode='+row.maintainPlanCode+'" class="btnList" title="${text('预防性维护故障通知')}"><i class="fa fa-wrench"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}

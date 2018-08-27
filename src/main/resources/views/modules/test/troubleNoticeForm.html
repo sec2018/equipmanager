@@ -91,7 +91,9 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('维修人员编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="maintainerCode" maxlength="64" class="form-control"/>
+								<!--<通过搜索框方式来选择维修人员>-->
+								<#form:treeselect id="user" title="${text('维修员')}" path="user.userCode" labelPath="user.userName"
+								url="${ctx}/sys/office/treeData?isLoadUser=true" class="" allowClear="true"/>
 							</div>
 						</div>
 					</div>
@@ -378,6 +380,11 @@ if($.getUrlParam("inspectPlanCode")!=null){
 }else if($.getUrlParam("checkPlanCode")!=null){
 	$(function () {
 		$('#planCode').val($.getUrlParam("checkPlanCode"));
+		$('#planCode').attr("readOnly","readOnly");
+	});
+}else if($.getUrlParam("maintainPlanCode")!=null){
+	$(function () {
+		$('#planCode').val($.getUrlParam("maintainPlanCode"));
 		$('#planCode').attr("readOnly","readOnly");
 	});
 }else{

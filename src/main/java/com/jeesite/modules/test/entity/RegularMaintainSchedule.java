@@ -25,7 +25,7 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 		@Column(name="regular_schedule_code", attrName="regularScheduleCode", label="定修安排编号", isPK=true),
 		@Column(name="regular_plan_code", attrName="regularPlanCode", label="定修计划编号"),
 		@Column(name="regular_plan_name", attrName="regularPlanName", label="定修计划名称", queryType=QueryType.LIKE),
-		@Column(name="maintainer_code", attrName="maintainerCode", label="定修员编号"),
+		@Column(name="maintainer_code", attrName="user.userCode", label="定修员编号"),//通过搜索框来选择定修人员
 		@Column(name="regular_maintain_date", attrName="regularMaintainDate", label="定修时间"),
 		@Column(name="regular_finish_status", attrName="regularFinishStatus", label="定修完成状态", comment="定修完成状态（0-未完成  1-已完成）"),
 		@Column(includeEntity=DataEntity.class),
@@ -33,7 +33,6 @@ import com.jeesite.common.mybatis.mapper.query.QueryType;
 	}, joinTable= {
 		@JoinTable(type = Type.LEFT_JOIN, entity = User.class, attrName = "user", alias = "u1",
 				on = "u1.user_code = a.maintainer_code", columns = {
-				//@Column(name = "user_code", label = "用户编码", isPK = true),
 				@Column(name = "user_name", label = "用户名称", isQuery = false),
 		}),
 		@JoinTable(type = Type.LEFT_JOIN, entity = RegularMaintainPlan.class, attrName = "regularMaintainPlan", alias = "p",

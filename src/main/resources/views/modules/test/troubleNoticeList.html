@@ -122,6 +122,10 @@ $('#dataGrid').dataGrid({
 				row.noticeType = "巡检异常";
 				 <!--<点击点巡检计划编号，跳转到点巡检计划维护结果界面>-->
 				 return '<a href="${ctx}/test/inspectPlan/list?planCode='+row.planCode+'"  target = "_blank" class="btnList" data-title="${text('编辑巡检计划')}">'+(val||row.id)+'</a>';
+            }else if(row.noticeType == '2'){
+				row.noticeType = "预防性维护异常";
+				 <!--<点击点预防性维护计划编号，跳转到点预防性维护计划结果界面>-->
+				 return '<a href="${ctx}/test/preventMaintainPlan/list?planCode='+row.planCode+'"  target = "_blank" class="btnList" data-title="${text('编辑预防性维护计划')}">'+(val||row.id)+'</a>';
             }else {
 			   row.noticeType = "事故";
 			   return '<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'" class="btnList" data-title="${text('编辑故障通知单')}">'+(val||row.id)+'</a>';
@@ -159,7 +163,7 @@ $('#dataGrid').dataGrid({
 			<% if(hasPermi('test:troubleNotice:edit')){ %>
 				 if(row.noticeStatus == '已指派，待承接' || row.noticeStatus == '已承接'){
 					<%if(hasPermi('test:troubleNotice:view')){%>
-                        actions.push('<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'&opera=view" class="btnList" title="${text('查看申请信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
+                        actions.push('<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'&opera=view" class="btnList" title="${text('查看通知单信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
 					<% } %>
 			    }else{
 			    	actions.push('<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'" class="btnList" title="${text('编辑故障通知单')}"><i class="fa fa-pencil"></i></a>&nbsp;');
@@ -171,6 +175,10 @@ $('#dataGrid').dataGrid({
 					<!--}-->
 					actions.push('<a href="${ctx}/test/troubleNotice/delete?noticeCode='+row.noticeCode+'" class="btnList" title="${text('删除故障通知单')}" data-confirm="${text('确认要删除该故障通知单吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
 				}
+			<% } %>
+			<!--<维修人员只能查看故障通知单，并决定是否承接>-->
+			<%if(hasPermi('test:troubleNotice:scan')){%>
+            	actions.push('<a href="${ctx}/test/troubleNotice/form?noticeCode='+row.noticeCode+'&planCode='+row.planCode+'&opera=view" class="btnList" title="${text('查看通知单信息')}"><i class="fa fa-eye"></i></a>&nbsp;');
 			<% } %>
 			return actions.join('');
 		}}
