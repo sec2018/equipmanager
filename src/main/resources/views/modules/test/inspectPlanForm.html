@@ -460,19 +460,4 @@ function treeselectCallback(id, act, index, layero){
 		});
 	}
 }
-
-//获取url参数
-(function ($) {
-    $.getUrlParam = function (name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) return decodeURIComponent(r[2]); return null;
-    }
-})(jQuery);
-
-<!--$(function () {-->
-    <!--if($.getUrlParam("opera") == "renote"){-->
-        <!--alert(1);-->
-    <!--}-->
-<!--})-->
 </script>

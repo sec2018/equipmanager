@@ -106,7 +106,8 @@ $('#dataGrid').dataGrid({
 		//{header:'${text('本级排序号')}', name:'treeSort', index:'a.tree_sort', width:150, align:"center"},
 		//{header:'${text('定修节点名称')}', name:'regularTreeName', index:'a.regular_tree_name', width:150, align:"left"},
 		{header:'${text('设备编号')}', name:'equipCode', index:'a.equip_code', width:150, align:"left"},
-		{header:'${text('备品备件编号')}', name:'componentCode', index:'a.component_code', width:150, align:"left"},
+		<!--<备品备件编号不应该出现在定修计划列表中，在定修结果中显示就可以了>-->
+		//{header:'${text('备品备件编号')}', name:'componentCode', index:'a.component_code', width:150, align:"left"},
 		{header:'${text('定修部位')}', name:'regularMaintainPart', index:'a.regular_maintain_part', width:150, align:"left"},
 		{header:'${text('定修内容')}', name:'regularMaintainContent', index:'a.regular_maintain_content', width:150, align:"left"},
 		{header:'${text('定修目标')}', name:'regularMaintainGoal', index:'a.regular_maintain_goal', width:150, align:"left"},
@@ -132,7 +133,7 @@ $('#dataGrid').dataGrid({
 			<% } %>
 			<!--<定修结果录入权限与定修计划编辑权限是相互独立的，定修结果录入权归维护员，计划编辑权归设备管理员>-->
 			 <% if(hasPermi('test:regularMaintainResult:edit')){ %>
-                actions.push('<a href="${ctx}/test/regularMaintainResult/form?regularPlanCode='+row.regularPlanCode+'&opera=renote" class="btnList" title="${text('定修结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
+                actions.push('<a href="${ctx}/test/regularMaintainResult/form?regularPlanCode='+row.regularPlanCode+'" class="btnList" title="${text('定修结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
              <% } %>
 			return actions.join('');
 		}}

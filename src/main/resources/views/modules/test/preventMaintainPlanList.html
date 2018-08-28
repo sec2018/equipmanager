@@ -189,7 +189,7 @@ $('#dataGrid').dataGrid({
 			<% } %>
 			<!--<维护结果录入权限与维护计划编辑权限是相互独立的，维护结果录入权归维护员，计划编辑权归设备管理员>-->
 			 <% if(hasPermi('test:preventMaintainResult:edit')){ %>
-                actions.push('<a href="${ctx}/test/preventMaintainResult/form?maintainPlanCode='+row.maintainPlanCode+'&opera=renote" class="btnList" title="${text('维护结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
+                actions.push('<a href="${ctx}/test/preventMaintainResult/form?maintainPlanCode='+row.maintainPlanCode+'" class="btnList" title="${text('维护结果录入')}"><i class="fa fa-magic"></i></a>&nbsp;');
              <% } %>
 			return actions.join('');
 		}}
