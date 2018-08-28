@@ -4,12 +4,12 @@
 #============================#
 
 # 产品或项目名称、版本、版权年份
-productName: 设备管理系统
+productName: 设备健康管理与智能维护系统
 productVersion: V1.0
 copyrightYear: 2018
 
 # 软件提供商公司或个人名称
-companyName: jyf
+companyName: 上海电气股份有限公司
 
 #是否演示模式
 demoMode: false
