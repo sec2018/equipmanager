@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import java.util.List;
 import java.util.Map;
 
+import com.jeesite.modules.test.entity.EquipInfo;
+import com.jeesite.modules.test.service.EquipInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,9 @@ public class CheckPlansController extends BaseController {
 
 	@Autowired
 	private CheckPlansService checkPlansService;
+
+	@Autowired
+	private EquipInfoService equipInfoService;
 	
 	/**
 	 * 获取数据
@@ -113,6 +118,12 @@ public class CheckPlansController extends BaseController {
 	@RequiresPermissions("test:checkPlans:view")
 	@RequestMapping(value = "form")
 	public String form(CheckPlans checkPlans, Model model) {
+		//初始化设备信息实例作为查询条件
+		EquipInfo equipInfo = new EquipInfo();
+		//查询所有设备信息
+		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		//将设备信息传到前端
+		model.addAttribute("equipInfoList", equipInfoList);
 		// 创建并初始化下一个节点信息
 		checkPlans = createNextNode(checkPlans);
 		model.addAttribute("checkPlans", checkPlans);

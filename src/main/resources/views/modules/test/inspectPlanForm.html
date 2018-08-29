@@ -176,15 +176,18 @@
 							</div>
 						</div>
 					</div>
-					<!--<div class="col-xs-6">-->
-						<!--<div class="form-group">-->
-							<!--<label class="control-label col-sm-4" title="">-->
-								<!--<span class="required hide">*</span> ${text('巡检员编号')}：<i class="fa icon-question hide"></i></label>-->
-							<!--<div class="col-sm-8">-->
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label class="control-label col-sm-4" title="">
+								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
+							<div class="col-sm-8">
 								<!--<#form:input path="inspecterCode" maxlength="64" class="form-control"/>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
+								<!--<将数据库中获取的设备信息以列表的形式显示到前端，根据需要可以显示设备编号，也可以显示设备名称，只需修改itemLabel标签，在此显示的是设备编号>-->
+								<#form:select multiple="true" path="inspecterCode" items="${equipInfoList}"
+								itemLabel="equipId" itemValue="equipId" class="form-control"/>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">

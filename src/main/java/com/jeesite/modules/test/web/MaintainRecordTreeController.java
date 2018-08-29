@@ -6,6 +6,12 @@ package com.jeesite.modules.test.web;
 import java.util.List;
 import java.util.Map;
 
+import com.jeesite.modules.test.entity.ComponentInfo;
+import com.jeesite.modules.test.entity.EquipInfo;
+import com.jeesite.modules.test.entity.TroubleNotice;
+import com.jeesite.modules.test.service.ComponentInfoService;
+import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.TroubleNoticeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +43,15 @@ public class MaintainRecordTreeController extends BaseController {
 
 	@Autowired
 	private MaintainRecordTreeService maintainRecordTreeService;
+
+	@Autowired
+	private EquipInfoService equipInfoService;
+
+	@Autowired
+	private ComponentInfoService componentInfoService;
+
+	@Autowired
+	private TroubleNoticeService troubleNoticeService;
 	
 	/**
 	 * 获取数据
@@ -144,6 +159,18 @@ public class MaintainRecordTreeController extends BaseController {
 	@RequiresPermissions("test:maintainRecordTree:view")
 	@RequestMapping(value = "form")
 	public String form(MaintainRecordTree maintainRecordTree, Model model) {
+		//从数据库获取所有设备信息传到前端显示
+		EquipInfo equipInfo = new EquipInfo();
+		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		model.addAttribute("equipInfoList", equipInfoList);
+		//从数据库获取所有备品备件信息传到前端显示
+		ComponentInfo componentInfo = new ComponentInfo();
+		List<ComponentInfo> componentInfoList = componentInfoService.findList(componentInfo);
+		model.addAttribute("componentInfoList", componentInfoList);
+		//从数据库获取通知单信息传到前端显示
+		TroubleNotice troubleNotice = new TroubleNotice();
+		List<TroubleNotice> troubleNoticeList = troubleNoticeService.findList(troubleNotice);
+		model.addAttribute("troubleNoticeList", troubleNoticeList);
 		// 创建并初始化下一个节点信息
 		maintainRecordTree = createNextNode(maintainRecordTree);
 		model.addAttribute("maintainRecordTree", maintainRecordTree);

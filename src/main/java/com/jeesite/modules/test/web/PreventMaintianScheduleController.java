@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.test.entity.PreventMaintainPlan;
+import com.jeesite.modules.test.service.PreventMaintainPlanService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.PreventMaintianSchedule;
 import com.jeesite.modules.test.service.PreventMaintianScheduleService;
 
+import java.util.List;
+
 /**
  * 预防性维护计划安排Controller
  * @author dyl
@@ -33,6 +37,9 @@ public class PreventMaintianScheduleController extends BaseController {
 
 	@Autowired
 	private PreventMaintianScheduleService preventMaintianScheduleService;
+
+	@Autowired
+	private PreventMaintainPlanService preventMaintainPlanService;
 	
 	/**
 	 * 获取数据
@@ -69,6 +76,9 @@ public class PreventMaintianScheduleController extends BaseController {
 	@RequiresPermissions("test:preventMaintianSchedule:view")
 	@RequestMapping(value = "form")
 	public String form(PreventMaintianSchedule preventMaintianSchedule, Model model) {
+		PreventMaintainPlan preventMaintainPlan = new PreventMaintainPlan();
+		List<PreventMaintainPlan> preventMaintainPlanList = preventMaintainPlanService.findList(preventMaintainPlan);
+		model.addAttribute("preventMaintainPlanList", preventMaintainPlanList);
 		model.addAttribute("preventMaintianSchedule", preventMaintianSchedule);
 		return "modules/test/preventMaintianScheduleForm";
 	}

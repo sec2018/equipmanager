@@ -62,11 +62,9 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<!--<#form:input path="equipCode" maxlength="64" class="form-control"/>-->
-								<#form:select path="regularMaintainCycle" dictType="regular_maintain_cycle" blankOption="true"  maxlength="1" class="form-control"/>
-								<#form:select path="equipId" class="input-mini">
-									<#form:options items="$(equipList)" itemLabel="equipName" itemValue="regularPlanCode" htmlEscape="false"/>
-								</form:select>
+								<!--<将数据库中获取的设备信息以列表的形式显示到前端，根据需要可以显示设备编号，也可以显示设备名称，只需修改itemLabel标签，在此显示的是设备编号>-->
+								<#form:select multiple="true" path="equipCode" items="${equipInfoList}"
+								itemLabel="equipId" itemValue="equipId" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -405,4 +403,36 @@ function treeselectCallback(id, act, index, layero){
 		});
 	}
 }
+
+<!--function findtemplate(v) {-->
+    <!--$.ajax({-->
+        <!--type : "post",-->
+        <!--async : false,-->
+        <!--url : "getPostTemplateJson",-->
+        <!--data : {-->
+            <!--'type' : v-->
+        <!--},-->
+        <!--dataType : "json",-->
+        <!--success : function(msg) {-->
+            <!--$("#template").empty();-->
+            <!--//$("#template").select2();-->
+            <!--if (msg.length > 0) {-->
+                <!--for (var i = 0; i < msg.length; i++) {-->
+                        <!--var partId = msg[i].value;-->
+                        <!--var partName = msg[i].label;-->
+                        <!--var $option = $("<option>").attr({-->
+                            <!--"value" : partId-->
+                        <!--}).text(partName);-->
+                        <!--$("#template").append($option);-->
+                <!--}-->
+                <!--//$("#template option:first").prop("selected", 'selected');-->
+                <!--$("#template").change();-->
+
+            <!--}-->
+        <!--},-->
+        <!--error : function(json) {-->
+            <!--$.jBox.alert("网络异常！");-->
+        <!--}-->
+    <!--});-->
+<!--}-->
 </script>

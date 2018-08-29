@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.test.entity.CheckPlans;
+import com.jeesite.modules.test.service.CheckPlansService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.CheckSchedule;
 import com.jeesite.modules.test.service.CheckScheduleService;
 
+import java.util.List;
+
 /**
  * 点检安排Controller
  * @author jyf
@@ -33,6 +37,9 @@ public class CheckScheduleController extends BaseController {
 
 	@Autowired
 	private CheckScheduleService checkScheduleService;
+
+	@Autowired
+	private CheckPlansService checkPlansService;
 	
 	/**
 	 * 获取数据
@@ -69,6 +76,12 @@ public class CheckScheduleController extends BaseController {
 	@RequiresPermissions("test:checkSchedule:view")
 	@RequestMapping(value = "form")
 	public String form(CheckSchedule checkSchedule, Model model) {
+		//初始化点检计划实例作为查询条件
+		CheckPlans checkPlans = new CheckPlans();
+		//查询所有点击计划编号
+		List<CheckPlans> checkPlansList = checkPlansService.findList(checkPlans);
+		//将查询结果传入前端显示
+		model.addAttribute("checkPlansList", checkPlansList);
 		model.addAttribute("checkSchedule", checkSchedule);
 		return "modules/test/checkScheduleForm";
 	}

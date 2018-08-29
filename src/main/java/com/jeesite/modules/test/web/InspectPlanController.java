@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import java.util.List;
 import java.util.Map;
 
+import com.jeesite.modules.test.entity.EquipInfo;
+import com.jeesite.modules.test.service.EquipInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,9 @@ public class InspectPlanController extends BaseController {
 
 	@Autowired
 	private InspectPlanService inspectPlanService;
+
+	@Autowired
+	private EquipInfoService equipInfoService;
 	
 	/**
 	 * 获取数据
@@ -122,6 +127,9 @@ public class InspectPlanController extends BaseController {
 	@RequiresPermissions("test:inspectPlan:view")
 	@RequestMapping(value = "form")
 	public String form(InspectPlan inspectPlan, Model model) {
+		EquipInfo equipInfo = new EquipInfo();
+		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		model.addAttribute("equipInfoList", equipInfoList);
 		// 创建并初始化下一个节点信息
 		inspectPlan = createNextNode(inspectPlan);
 		model.addAttribute("inspectPlan", inspectPlan);

@@ -3,9 +3,13 @@
  */
 package com.jeesite.modules.test.entity;
 
+import com.jeesite.common.collect.ListUtils;
+import com.jeesite.common.lang.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import com.jeesite.common.entity.Extend;
 import java.util.Date;
+import java.util.List;
+
 import com.jeesite.common.mybatis.annotation.JoinTable;
 import com.jeesite.common.mybatis.annotation.JoinTable.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -49,6 +53,52 @@ public class RegularMaintainPlan extends TreeEntity<RegularMaintainPlan> {
 	private String regularMaintainCycle;		// 定修周期（0-月，1-季度，2-年）
 	private String maintainerCode;		// 定修员编号
 	private Extend extend;		// 扩展字段
+	//test code by dang
+	//private EquipInfo equipInfo;
+	//private String[] equipPlans;
+	//private List<EquipInfo> equipInfoList;
+//	private List<EquipPlan> equipPlanList;
+//
+//	public List<EquipPlan> getEquipPlanList() {
+//		return equipPlanList;
+//	}
+//
+//	public void setEquipPlanList(List<EquipPlan> equipPlanList) {
+//		this.equipPlanList = equipPlanList;
+//	}
+//	public List<EquipInfo> getEquipInfoList() {
+//		return equipInfoList;
+//	}
+//
+//	public void setEquipInfoList(List<EquipInfo> equipInfoList) {
+//		this.equipInfoList = equipInfoList;
+//	}
+
+//	public String[] getEquipPlans(){
+//		List<String> list = ListUtils.extractToList(equipPlanList, "equipCode");
+//		return (String[])list.toArray(new String[list.size()]);
+//	}
+//
+//	public void setEquipPlans(String[] equipPlans) {
+//		String[] var2 = equipPlans;
+//		int var3 = equipPlans.length;
+//		for(int var4 = 0; var4 < var3; ++var4) {
+//			String val = var2[var4];
+//			if (StringUtils.isNotBlank(val)) {
+//				EquipPlan equipPlan = new EquipPlan();
+//				equipPlan.setEquipCode(val);
+//				equipPlanList.add(equipPlan);
+//			}
+//		}
+//	}
+
+//	public EquipInfo getEquipInfo() {
+//		return equipInfo;
+//	}
+//
+//	public void setEquipInfo(EquipInfo equipInfo) {
+//		this.equipInfo = equipInfo;
+//	}
 	
 	public RegularMaintainPlan() {
 		this(null);

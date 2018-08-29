@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.test.entity.RegularMaintainPlan;
+import com.jeesite.modules.test.service.RegularMaintainPlanService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.RegularMaintainSchedule;
 import com.jeesite.modules.test.service.RegularMaintainScheduleService;
 
+import java.util.List;
+
 /**
  * 定修安排Controller
  * @author dyl
@@ -33,6 +37,8 @@ public class RegularMaintainScheduleController extends BaseController {
 
 	@Autowired
 	private RegularMaintainScheduleService regularMaintainScheduleService;
+	@Autowired
+	private RegularMaintainPlanService regularMaintainPlanService;
 	
 	/**
 	 * 获取数据
@@ -69,6 +75,13 @@ public class RegularMaintainScheduleController extends BaseController {
 	@RequiresPermissions("test:regularMaintainSchedule:view")
 	@RequestMapping(value = "form")
 	public String form(RegularMaintainSchedule regularMaintainSchedule, Model model) {
+		//初始化定修计划实例作为查询条件
+		RegularMaintainPlan regularMaintainPlan = new RegularMaintainPlan();
+		//查询所有定修计划编号
+		List<RegularMaintainPlan> regularMaintainPlanList = regularMaintainPlanService.findList(regularMaintainPlan);
+		//将定修计划编号传入前台
+		model.addAttribute("regularMaintainPlanList", regularMaintainPlanList);
+
 		model.addAttribute("regularMaintainSchedule", regularMaintainSchedule);
 		return "modules/test/regularMaintainScheduleForm";
 	}

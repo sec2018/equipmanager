@@ -143,7 +143,8 @@ $('#dataGrid').dataGrid({
 		//{header:'${text('节点名称')}', name:'treeName', index:'a.tree_name', width:150, align:"left"},
 		{header:'${text('路径编号')}', name:'inspecterRodeCode', index:'a.inspecter_rode_code', width:120, align:"left"},
 		//{header:'${text('巡检路径名称')}', name:'inspectRodeName', index:'a.inspect_rode_name', width:150, align:"left"},
-		{header:'${text('设备编号')}', name:'equipInfo.equipId', index:'', width:120, align:"left"},
+		//{header:'${text('设备编号')}', name:'equipInfo.equipId', index:'', width:120, align:"left"},
+		{header:'${text('设备编号')}', name:'inspecterCode', index:'a.inspecter_code', width:150, align:"left"},
 		//{header:'${text('巡检时间')}', name:'inspectPlanDate', index:'a.inspect_plan_date', width:150, align:"center"},
 		{header:'${text('巡检部位')}', name:'inspectPart', index:'a.inspect_part', width:120, align:"left"},
 		{header:'${text('巡检内容')}', name:'inspectContent', index:'a.inspect_content', width:120, align:"left"},
@@ -151,7 +152,6 @@ $('#dataGrid').dataGrid({
 		{header:'${text('巡检周期')}', name:'inspectCycle', index:'a.inspect_cycle', width:120, align:"left"},
 		{header:'${text('巡检方法')}', name:'inspectMehod', index:'a.inspect_mehod', width:120, align:"left"},
 		{header:'${text('运行状态')}', name:'inspectRunStatus', index:'a.inspect_run_status', width:120, align:"left"},
-		//{header:'${text('巡检员编号')}', name:'inspecterCode', index:'a.inspecter_code', width:150, align:"left"},
 		<!--{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){-->
 			<!--return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);-->
 		<!--}},-->

@@ -19,7 +19,10 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('点检计划编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="chackPlanCode" maxlength="64" class="form-control"/>
+								<!--<#form:input path="chackPlanCode" maxlength="64" class="form-control"/>-->
+								<!--<将数据库中获取的定修计划以列表的形式显示到前端，根据需要可以显示计划编号，也可以显示计划名称，只需修改itemLabel标签，在此显示的是计划编号>-->
+								<#form:select multiple="true" path="chackPlanCode" items="${checkPlansList}"
+								itemLabel="chackPlanCode" itemValue="chackPlanCode" class="form-control"/>
 							</div>
 						</div>
 					</div>

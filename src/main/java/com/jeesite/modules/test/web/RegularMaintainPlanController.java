@@ -110,12 +110,16 @@ public class RegularMaintainPlanController extends BaseController {
 	@RequiresPermissions("test:regularMaintainPlan:view")
 	@RequestMapping(value = "form")
 	public String form(RegularMaintainPlan regularMaintainPlan, Model model) {
+	    //test code by dang
 		//初始化设备信息实例作为查询条件
 		EquipInfo equipInfo = new EquipInfo();
 		//查询所有的设备信息
-		List<EquipInfo> equipList = equipInfoService.findList(equipInfo);
+		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+//        if (StringUtils.isNotBlank(regularMaintainPlan.getRegularPlanCode())) {
+//            regularMaintainPlan.setEquipPlanList(regularMaintainPlanService.findEquipPlanList(regularMaintainPlan));
+//        }
 		//将设备列表信息传入前台
-		model.addAttribute("equipList", equipList);
+		model.addAttribute("equipInfoList", equipInfoList);
 		// 创建并初始化下一个节点信息
 		regularMaintainPlan = createNextNode(regularMaintainPlan);
 		model.addAttribute("regularMaintainPlan", regularMaintainPlan);

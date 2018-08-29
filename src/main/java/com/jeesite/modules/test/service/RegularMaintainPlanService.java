@@ -5,6 +5,9 @@ package com.jeesite.modules.test.service;
 
 import java.util.List;
 
+import com.jeesite.modules.test.dao.EquipPlanDao;
+import com.jeesite.modules.test.entity.EquipPlan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +25,8 @@ import com.jeesite.modules.file.utils.FileUploadUtils;
 @Service
 @Transactional(readOnly=true)
 public class RegularMaintainPlanService extends TreeService<RegularMaintainPlanDao, RegularMaintainPlan> {
-	
+	@Autowired
+	private EquipPlanDao equipPlanDao;
 	/**
 	 * 获取单条数据
 	 * @param regularMaintainPlan
@@ -76,5 +80,11 @@ public class RegularMaintainPlanService extends TreeService<RegularMaintainPlanD
 	public void delete(RegularMaintainPlan regularMaintainPlan) {
 		super.delete(regularMaintainPlan);
 	}
+	//test code by dang
+//	public List<EquipPlan> findEquipPlanList(RegularMaintainPlan regularMaintainPlan) {
+//		EquipPlan equipPlan = new EquipPlan();
+//		equipPlan.setPlanCode(regularMaintainPlan.getRegularPlanCode());
+//		return equipPlanDao.findList(equipPlan);
+//	}
 	
 }

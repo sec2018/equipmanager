@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.test.entity.EquipInfo;
+import com.jeesite.modules.test.service.EquipInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.TroubleNotice;
 import com.jeesite.modules.test.service.TroubleNoticeService;
 
+import java.util.List;
+
 /**
  * 故障通知单Controller
  * @author dyl
@@ -33,6 +37,9 @@ public class TroubleNoticeController extends BaseController {
 
 	@Autowired
 	private TroubleNoticeService troubleNoticeService;
+
+	@Autowired
+	private  EquipInfoService equipInfoService;
 	
 	/**
 	 * 获取数据
@@ -69,6 +76,12 @@ public class TroubleNoticeController extends BaseController {
 	@RequiresPermissions("test:troubleNotice:view")
 	@RequestMapping(value = "form")
 	public String form(TroubleNotice troubleNotice, Model model) {
+		//初始化设备信息实例作为查询条件
+		EquipInfo equipInfo = new EquipInfo();
+		//查询所有的设备信息
+		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		//将设备列表信息传入前台
+		model.addAttribute("equipInfoList", equipInfoList);
 		model.addAttribute("troubleNotice", troubleNotice);
 		return "modules/test/troubleNoticeForm";
 	}
