@@ -21,7 +21,7 @@
 							<div class="col-sm-8">
 								<!--<#form:input path="inspectPlanCode" maxlength="64" class="form-control"/>-->
 								<!--<将数据库中获取的巡检计划以列表的形式显示到前端，根据需要可以显示计划编号，也可以显示计划名称，只需修改itemLabel标签，在此显示的是计划编号>-->
-								<#form:select multiple="true" path="inspectPlanCode" items="${inspectPlanList}"
+								<#form:select multiple="false" blankOption="true" path="inspectPlanCode" items="${inspectPlanList}"
 								itemLabel="inspectPlanCode" itemValue="inspectPlanCode" class="form-control"/>
 							</div>
 						</div>

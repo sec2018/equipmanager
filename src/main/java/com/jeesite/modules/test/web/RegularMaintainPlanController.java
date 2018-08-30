@@ -120,6 +120,9 @@ public class RegularMaintainPlanController extends BaseController {
 //        }
 		//将设备列表信息传入前台
 		model.addAttribute("equipInfoList", equipInfoList);
+		//查询设备部位信息传到前端
+		List<RegularMaintainPlan> regularMaintainPlanList= regularMaintainPlanService.findList(regularMaintainPlan);
+		model.addAttribute("regularMaintainPlanList", regularMaintainPlanList);
 		// 创建并初始化下一个节点信息
 		regularMaintainPlan = createNextNode(regularMaintainPlan);
 		model.addAttribute("regularMaintainPlan", regularMaintainPlan);

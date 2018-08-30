@@ -124,6 +124,9 @@ public class CheckPlansController extends BaseController {
 		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
 		//将设备信息传到前端
 		model.addAttribute("equipInfoList", equipInfoList);
+		//查询设备部位信息传到前端
+		List<CheckPlans> checkPlansList = checkPlansService.findList(checkPlans);
+		model.addAttribute("checkPlansList", checkPlansList);
 		// 创建并初始化下一个节点信息
 		checkPlans = createNextNode(checkPlans);
 		model.addAttribute("checkPlans", checkPlans);

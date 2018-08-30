@@ -64,7 +64,7 @@
 							<div class="col-sm-8">
 								<!--<#form:input path="equipCode" maxlength="64" class="form-control"/>-->
 								<!--<将数据库中获取的设备信息以列表的形式显示到前端，根据需要可以显示设备编号，也可以显示设备名称，只需修改itemLabel标签，在此显示的是设备编号>-->
-								<#form:select multiple="true" path="equipCode" items="${equipInfoList}"
+								<#form:select multiple="false" blankOption="true" path="equipCode" items="${equipInfoList}"
 								itemLabel="equipId" itemValue="equipId" class="form-control"/>
 							</div>
 						</div>
@@ -83,16 +83,19 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('给油脂部位')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维护部位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="oilPart" maxlength="255" class="form-control"/>
+								<!--<#form:input path="oilPart" maxlength="255" class="form-control"/>-->
+								<!--<将数据库中获取的设备部位信息以列表的形式显示到前端，根据需要可以显示部位编号，也可以显示部位名称，只需修改itemLabel标签，在此显示的是编号>-->
+								<#form:select multiple="false" blankOption="true" path="oilPart" items="${preventMaintainPlanList}"
+								itemLabel="oilPart" itemValue="oilPart" class="form-control"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('给油脂方式')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('维护方式')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<!--<#form:input path="oilWay" maxlength="1" class="form-control"/>-->
 								<#form:select path="oilWay" dictType="oil_way" blankOption="true"  maxlength="1" class="form-control"/>
@@ -104,16 +107,18 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('润滑油牌号')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('备品备件编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="oilLabelCode" maxlength="255" class="form-control"/>
+								<!--<#form:input path="oilLabelCode" maxlength="255" class="form-control"/>-->
+								<#form:select multiple="false" blankOption="true" path="oilLabelCode" items="${componentInfoList}"
+								itemLabel="componentCode" itemValue="componentCode" class="form-control"/>
 							</div>
 						</div>
 					</div>
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('补充油量')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('补充量')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="supplyOilMass" maxlength="255" class="form-control"/>
 							</div>
@@ -134,7 +139,7 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label class="control-label col-sm-4" title="">
-								<span class="required hide">*</span> ${text('更换油量')}：<i class="fa icon-question hide"></i></label>
+								<span class="required hide">*</span> ${text('更换量')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<#form:input path="changeOilMass" maxlength="255" class="form-control"/>
 							</div>

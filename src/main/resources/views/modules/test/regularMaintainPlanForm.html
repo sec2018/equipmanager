@@ -63,8 +63,8 @@
 								<span class="required hide">*</span> ${text('设备编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
 								<!--<将数据库中获取的设备信息以列表的形式显示到前端，根据需要可以显示设备编号，也可以显示设备名称，只需修改itemLabel标签，在此显示的是设备编号>-->
-								<#form:select multiple="true" path="equipCode" items="${equipInfoList}"
-								itemLabel="equipId" itemValue="equipId" class="form-control"/>
+								<#form:select multiple="false" blankOption="true" path="equipCode" items="${equipInfoList}"
+								itemLabel="equipId" itemValue="equipId" class="form-control" onchange="changeEquip(this.value)"/>
 							</div>
 						</div>
 					</div>
@@ -84,7 +84,10 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('定修部位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="regularMaintainPart" maxlength="255" class="form-control"/>
+								<!--<#form:input path="regularMaintainPart" maxlength="255" class="form-control"/>-->
+								<!--<将数据库中获取的设备部位信息以列表的形式显示到前端，根据需要可以显示部位编号，也可以显示部位名称，只需修改itemLabel标签，在此显示的是编号>-->
+								<#form:select multiple="false" blankOption="true" path="regularMaintainPart" items="${regularMaintainPlanList}"
+								itemLabel="regularMaintainPart" itemValue="regularMaintainPart" class="form-control"/>
 							</div>
 						</div>
 					</div>
@@ -401,6 +404,22 @@ function treeselectCallback(id, act, index, layero){
 				+$('#parentCode').val(), function(data){
 			$('#treeSort').val(data.treeSort);
 		});
+	}
+}
+
+var equips = new Array(2);
+equips = {"OS_11","OS_06","OS_05"};
+equips[0] = new Array("鼠标","CPU");
+equips[1] = new Array("键盘","硬盘");
+equips[2] = new Array("显卡","网卡");
+function changeEquip(val){
+	//alert(val);
+	for(var i=0; i<equips.length; i++){
+		if(val==equips[i]){
+			for(var j=0; j<equips[i].length; j++){
+				alert(equips[i][j]);
+			}
+		}
 	}
 }
 

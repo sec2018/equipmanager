@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,6 +17,7 @@ import com.jeesite.common.io.PropertiesUtils;
  * @version 2018-1-8
  */
 @SpringBootApplication(scanBasePackages={"com.jeesite.modules"})
+@MapperScan(value = {"com.jeesite.modules.test.dao.selfdao"})
 public class Application extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {

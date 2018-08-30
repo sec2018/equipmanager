@@ -30,7 +30,10 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('备品备件编号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="componentCode" maxlength="64" class="form-control"/>
+								<!--<#form:input path="componentCode" maxlength="64" class="form-control"/>-->
+								<!--<将数据库中获取的备品备件信息以列表的形式显示到前端，根据需要可以显示备品备件编号，也可以显示备品备件名称，只需修改itemLabel标签，在此显示的是编号>-->
+								<#form:select multiple="false" blankOption="true" path="componentCode" items="${componentInfoList}"
+								itemLabel="componentCode" itemValue="componentCode" class="form-control"/>
 							</div>
 						</div>
 					</div>

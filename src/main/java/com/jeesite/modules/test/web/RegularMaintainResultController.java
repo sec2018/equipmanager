@@ -6,6 +6,8 @@ package com.jeesite.modules.test.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.test.entity.ComponentInfo;
+import com.jeesite.modules.test.service.ComponentInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.RegularMaintainResult;
 import com.jeesite.modules.test.service.RegularMaintainResultService;
 
+import java.util.List;
+
 /**
  * 定修结果维护Controller
  * @author dyl
@@ -33,6 +37,9 @@ public class RegularMaintainResultController extends BaseController {
 
 	@Autowired
 	private RegularMaintainResultService regularMaintainResultService;
+
+	@Autowired
+	private ComponentInfoService componentInfoService;
 	
 	/**
 	 * 获取数据
@@ -69,6 +76,11 @@ public class RegularMaintainResultController extends BaseController {
 	@RequiresPermissions("test:regularMaintainResult:view")
 	@RequestMapping(value = "form")
 	public String form(RegularMaintainResult regularMaintainResult, Model model) {
+		//从数据库获取所有备品备件信息传到前端显示
+		ComponentInfo componentInfo = new ComponentInfo();
+		List<ComponentInfo> componentInfoList = componentInfoService.findList(componentInfo);
+		model.addAttribute("componentInfoList", componentInfoList);
+
 		model.addAttribute("regularMaintainResult", regularMaintainResult);
 		return "modules/test/regularMaintainResultForm";
 	}

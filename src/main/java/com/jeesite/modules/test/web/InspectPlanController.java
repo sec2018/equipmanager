@@ -5,9 +5,12 @@ package com.jeesite.modules.test.web;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import com.jeesite.modules.test.entity.EquipInfo;
+//import com.jeesite.modules.test.entity.EquipInfo;
+//import com.jeesite.modules.test.service.EquipInfoSelfService;
 import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +45,9 @@ public class InspectPlanController extends BaseController {
 
 	@Autowired
 	private EquipInfoService equipInfoService;
+
+	@Autowired
+	private EquipInfoSelfService equipInfoSelfService;
 	
 	/**
 	 * 获取数据
@@ -127,9 +133,13 @@ public class InspectPlanController extends BaseController {
 	@RequiresPermissions("test:inspectPlan:view")
 	@RequestMapping(value = "form")
 	public String form(InspectPlan inspectPlan, Model model) {
-		EquipInfo equipInfo = new EquipInfo();
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		//从数据库查询设备列表信息传到前端显示
+//		EquipInfo equipInfo = new EquipInfo();
+		Set<String> equipInfoList = equipInfoSelfService.findEquipAllType();
 		model.addAttribute("equipInfoList", equipInfoList);
+		//查询设备部位信息传到前端
+		List<InspectPlan> inspectPlanList = inspectPlanService.findList(inspectPlan);
+		model.addAttribute("inspectPlanList", inspectPlanList);
 		// 创建并初始化下一个节点信息
 		inspectPlan = createNextNode(inspectPlan);
 		model.addAttribute("inspectPlan", inspectPlan);

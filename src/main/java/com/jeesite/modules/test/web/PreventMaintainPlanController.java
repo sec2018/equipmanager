@@ -6,7 +6,9 @@ package com.jeesite.modules.test.web;
 import java.util.List;
 import java.util.Map;
 
+import com.jeesite.modules.test.entity.ComponentInfo;
 import com.jeesite.modules.test.entity.EquipInfo;
+import com.jeesite.modules.test.service.ComponentInfoService;
 import com.jeesite.modules.test.service.EquipInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class PreventMaintainPlanController extends BaseController {
 
 	 @Autowired
 	 private EquipInfoService equipInfoService;
+
+	 @Autowired
+	 private ComponentInfoService componentInfoService;
 	/**
 	 * 获取数据
 	 */
@@ -126,9 +131,17 @@ public class PreventMaintainPlanController extends BaseController {
 	@RequiresPermissions("test:preventMaintainPlan:view")
 	@RequestMapping(value = "form")
 	public String form(PreventMaintainPlan preventMaintainPlan, Model model) {
+		//
 		EquipInfo equipInfo = new EquipInfo();
 		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
 		model.addAttribute("equipInfoList", equipInfoList);
+		//获得预防性维护计划给油脂部位
+		List<PreventMaintainPlan> preventMaintainPlanList = preventMaintainPlanService.findList(preventMaintainPlan);
+		model.addAttribute("preventMaintainPlanList", preventMaintainPlanList);
+		//从数据库获取所有备品备件信息传到前端显示
+		ComponentInfo componentInfo = new ComponentInfo();
+		List<ComponentInfo> componentInfoList = componentInfoService.findList(componentInfo);
+		model.addAttribute("componentInfoList", componentInfoList);
 		// 创建并初始化下一个节点信息
 		preventMaintainPlan = createNextNode(preventMaintainPlan);
 		model.addAttribute("preventMaintainPlan", preventMaintainPlan);

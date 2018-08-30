@@ -171,6 +171,9 @@ public class MaintainRecordTreeController extends BaseController {
 		TroubleNotice troubleNotice = new TroubleNotice();
 		List<TroubleNotice> troubleNoticeList = troubleNoticeService.findList(troubleNotice);
 		model.addAttribute("troubleNoticeList", troubleNoticeList);
+		//从数据库获取维修部位信息传到前端显示
+		List<MaintainRecordTree> maintainRecordTreeList = maintainRecordTreeService.findList(maintainRecordTree);
+		model.addAttribute("maintainRecordTreeList", maintainRecordTreeList);
 		// 创建并初始化下一个节点信息
 		maintainRecordTree = createNextNode(maintainRecordTree);
 		model.addAttribute("maintainRecordTree", maintainRecordTree);

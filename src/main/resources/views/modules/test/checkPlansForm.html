@@ -64,7 +64,7 @@
 							<div class="col-sm-8">
 								<!--<#form:input path="equipCode" maxlength="64" class="form-control"/>-->
 								<!--<将数据库中获取的设备信息以列表的形式显示到前端，根据需要可以显示设备编号，也可以显示设备名称，只需修改itemLabel标签，在此显示的是设备编号>-->
-								<#form:select multiple="true" path="equipCode" items="${equipInfoList}"
+								<#form:select multiple="false" blankOption="true" path="equipCode" items="${equipInfoList}"
 								itemLabel="equipId" itemValue="equipId" class="form-control"/>
 							</div>
 						</div>
@@ -76,7 +76,10 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('点检部位')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="checkPart" maxlength="50" class="form-control"/>
+								<!--<#form:input path="checkPart" maxlength="50" class="form-control"/>-->
+								<!--<将数据库中获取的设备部位信息以列表的形式显示到前端，根据需要可以显示部位编号，也可以显示部位名称，只需修改itemLabel标签，在此显示的是编号>-->
+								<#form:select multiple="false" blankOption="true" path="checkPart" items="${checkPlansList}"
+								itemLabel="checkPart" itemValue="checkPart" class="form-control"/>
 							</div>
 						</div>
 					</div>

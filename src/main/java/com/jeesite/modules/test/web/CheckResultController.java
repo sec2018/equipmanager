@@ -10,8 +10,10 @@ import com.jeesite.common.lang.StringUtils;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.utils.UserUtils;
 import com.jeesite.modules.test.entity.CheckPlans;
+import com.jeesite.modules.test.entity.ComponentInfo;
 import com.jeesite.modules.test.entity.Subjects;
 import com.jeesite.modules.test.service.CheckPlansService;
+import com.jeesite.modules.test.service.ComponentInfoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.CheckResult;
 import com.jeesite.modules.test.service.CheckResultService;
 
+import java.util.List;
+
 /**
  * 点检结果Controller
  * @author jyf
@@ -43,6 +47,7 @@ public class CheckResultController extends BaseController {
 
 	@Autowired
 	private CheckPlansService checkPlansService;
+
 	
 	/**
 	 * 获取数据
