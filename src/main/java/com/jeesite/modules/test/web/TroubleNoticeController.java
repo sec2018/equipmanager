@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.TroubleNotice;
 import com.jeesite.modules.test.service.TroubleNoticeService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 故障通知单Controller
@@ -39,7 +42,7 @@ public class TroubleNoticeController extends BaseController {
 	private TroubleNoticeService troubleNoticeService;
 
 	@Autowired
-	private  EquipInfoService equipInfoService;
+	private EquipInfoSelfService equipInfoSelfService;
 	
 	/**
 	 * 获取数据
@@ -77,9 +80,14 @@ public class TroubleNoticeController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(TroubleNotice troubleNotice, Model model) {
 		//初始化设备信息实例作为查询条件
-		EquipInfo equipInfo = new EquipInfo();
-		//查询所有的设备信息
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		EquipInfo equipInfo = null;
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		for (String s:equipInfoSet) {
+			equipInfo = new EquipInfo();
+			equipInfo.setEquipId(s);
+			equipInfoList.add(equipInfo);
+		}
 		//将设备列表信息传入前台
 		model.addAttribute("equipInfoList", equipInfoList);
 		model.addAttribute("troubleNotice", troubleNotice);

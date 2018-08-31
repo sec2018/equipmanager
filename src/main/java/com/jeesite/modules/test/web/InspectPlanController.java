@@ -3,13 +3,12 @@
  */
 package com.jeesite.modules.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-//import com.jeesite.modules.test.entity.EquipInfo;
-//import com.jeesite.modules.test.service.EquipInfoSelfService;
-import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,6 @@ public class InspectPlanController extends BaseController {
 
 	@Autowired
 	private InspectPlanService inspectPlanService;
-
-	@Autowired
-	private EquipInfoService equipInfoService;
 
 	@Autowired
 	private EquipInfoSelfService equipInfoSelfService;
@@ -134,8 +130,14 @@ public class InspectPlanController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(InspectPlan inspectPlan, Model model) {
 		//从数据库查询设备列表信息传到前端显示
-//		EquipInfo equipInfo = new EquipInfo();
-		Set<String> equipInfoList = equipInfoSelfService.findEquipAllType();
+		EquipInfo equipInfo = null;
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		for (String s:equipInfoSet) {
+			equipInfo = new EquipInfo();
+			equipInfo.setEquipId(s);
+			equipInfoList.add(equipInfo);
+		}
 		model.addAttribute("equipInfoList", equipInfoList);
 		//查询设备部位信息传到前端
 		List<InspectPlan> inspectPlanList = inspectPlanService.findList(inspectPlan);

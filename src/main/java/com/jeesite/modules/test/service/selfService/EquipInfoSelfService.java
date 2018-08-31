@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 public interface EquipInfoSelfService {
 
-    Set<String> findEquipAllType();
+    Set<String> findAllEquipId();
 }

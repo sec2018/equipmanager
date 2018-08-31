@@ -3,11 +3,13 @@
  */
 package com.jeesite.modules.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.jeesite.modules.test.entity.EquipInfo;
-import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +43,7 @@ public class CheckPlansController extends BaseController {
 	private CheckPlansService checkPlansService;
 
 	@Autowired
-	private EquipInfoService equipInfoService;
+	private EquipInfoSelfService equipInfoSelfService;
 	
 	/**
 	 * 获取数据
@@ -118,10 +120,21 @@ public class CheckPlansController extends BaseController {
 	@RequiresPermissions("test:checkPlans:view")
 	@RequestMapping(value = "form")
 	public String form(CheckPlans checkPlans, Model model) {
-		//初始化设备信息实例作为查询条件
-		EquipInfo equipInfo = new EquipInfo();
-		//查询所有设备信息
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		//初始化空的设备信息对象
+		EquipInfo equipInfo = null;
+		//查询所有的equip_id
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		//定义EquipInfo类型的集合
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		//遍历equipInfoSet中所有的equip_id对象
+		for (String s:equipInfoSet) {
+			//实例化equipInfo对象
+			equipInfo = new EquipInfo();
+			//将equip_id封装到equipInfo对象中，equipInfo对象的其他字段为空
+			equipInfo.setEquipId(s);
+			//将equipInfo对象封装到equipInfoList中
+			equipInfoList.add(equipInfo);
+		}
 		//将设备信息传到前端
 		model.addAttribute("equipInfoList", equipInfoList);
 		//查询设备部位信息传到前端

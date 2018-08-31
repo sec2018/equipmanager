@@ -3,15 +3,19 @@
  */
 package com.jeesite.modules.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.jeesite.modules.test.entity.ComponentInfo;
 import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.entity.TroubleNotice;
 import com.jeesite.modules.test.service.ComponentInfoService;
-import com.jeesite.modules.test.service.EquipInfoService;
 import com.jeesite.modules.test.service.TroubleNoticeService;
+import com.jeesite.modules.test.service.selfService.ComponentInfoSelfService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
+import com.jeesite.modules.test.service.selfService.TroubleNoticeSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,13 +49,13 @@ public class MaintainRecordTreeController extends BaseController {
 	private MaintainRecordTreeService maintainRecordTreeService;
 
 	@Autowired
-	private EquipInfoService equipInfoService;
+	private EquipInfoSelfService equipInfoSelfService;
 
 	@Autowired
-	private ComponentInfoService componentInfoService;
+	private ComponentInfoSelfService componentInfoSelfService;
 
 	@Autowired
-	private TroubleNoticeService troubleNoticeService;
+	private TroubleNoticeSelfService troubleNoticeSelfService;
 	
 	/**
 	 * 获取数据
@@ -160,16 +164,34 @@ public class MaintainRecordTreeController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(MaintainRecordTree maintainRecordTree, Model model) {
 		//从数据库获取所有设备信息传到前端显示
-		EquipInfo equipInfo = new EquipInfo();
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		EquipInfo equipInfo = null;
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		for (String s:equipInfoSet) {
+			equipInfo = new EquipInfo();
+			equipInfo.setEquipId(s);
+			equipInfoList.add(equipInfo);
+		}
 		model.addAttribute("equipInfoList", equipInfoList);
 		//从数据库获取所有备品备件信息传到前端显示
-		ComponentInfo componentInfo = new ComponentInfo();
-		List<ComponentInfo> componentInfoList = componentInfoService.findList(componentInfo);
+		ComponentInfo componentInfo = null;
+		Set<String> componentInfoSet = componentInfoSelfService.findAllComponentCode();
+		List<ComponentInfo> componentInfoList = new ArrayList<ComponentInfo>();
+		for (String s:componentInfoSet) {
+			componentInfo = new ComponentInfo();
+			componentInfo.setComponentCode(s);
+			componentInfoList.add(componentInfo);
+		}
 		model.addAttribute("componentInfoList", componentInfoList);
 		//从数据库获取通知单信息传到前端显示
-		TroubleNotice troubleNotice = new TroubleNotice();
-		List<TroubleNotice> troubleNoticeList = troubleNoticeService.findList(troubleNotice);
+		TroubleNotice troubleNotice = null;
+		Set<String> troubleNoticeSet = troubleNoticeSelfService.findAllTroubleNoticeCode();
+		List<TroubleNotice> troubleNoticeList = new ArrayList<TroubleNotice>();
+		for (String s:troubleNoticeSet) {
+			troubleNotice = new TroubleNotice();
+			troubleNotice.setNoticeCode(s);
+			troubleNoticeList.add(troubleNotice);
+		}
 		model.addAttribute("troubleNoticeList", troubleNoticeList);
 		//从数据库获取维修部位信息传到前端显示
 		List<MaintainRecordTree> maintainRecordTreeList = maintainRecordTreeService.findList(maintainRecordTree);

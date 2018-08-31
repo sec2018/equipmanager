@@ -3,11 +3,13 @@
  */
 package com.jeesite.modules.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.jeesite.modules.test.entity.EquipInfo;
-import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,8 +41,9 @@ public class RegularMaintainPlanController extends BaseController {
 
 	@Autowired
 	private RegularMaintainPlanService regularMaintainPlanService;
+
 	@Autowired
-	private EquipInfoService equipInfoService;//注入设备信息的service
+	private EquipInfoSelfService equipInfoSelfService;
 	
 	/**
 	 * 获取数据
@@ -112,9 +115,14 @@ public class RegularMaintainPlanController extends BaseController {
 	public String form(RegularMaintainPlan regularMaintainPlan, Model model) {
 	    //test code by dang
 		//初始化设备信息实例作为查询条件
-		EquipInfo equipInfo = new EquipInfo();
-		//查询所有的设备信息
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		EquipInfo equipInfo = null;
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		for (String s:equipInfoSet) {
+			equipInfo = new EquipInfo();
+			equipInfo.setEquipId(s);
+			equipInfoList.add(equipInfo);
+		}
 //        if (StringUtils.isNotBlank(regularMaintainPlan.getRegularPlanCode())) {
 //            regularMaintainPlan.setEquipPlanList(regularMaintainPlanService.findEquipPlanList(regularMaintainPlan));
 //        }

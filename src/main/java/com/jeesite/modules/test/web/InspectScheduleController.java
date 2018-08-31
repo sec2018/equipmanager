@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.modules.test.entity.InspectPlan;
 import com.jeesite.modules.test.service.InspectPlanService;
+import com.jeesite.modules.test.service.selfService.InspectPlanSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.InspectSchedule;
 import com.jeesite.modules.test.service.InspectScheduleService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 巡检安排Controller
@@ -39,7 +42,7 @@ public class InspectScheduleController extends BaseController {
 	private InspectScheduleService inspectScheduleService;
 
 	@Autowired
-	private InspectPlanService inspectPlanService;
+	private InspectPlanSelfService inspectPlanSelfService;
 	
 	/**
 	 * 获取数据
@@ -77,9 +80,14 @@ public class InspectScheduleController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(InspectSchedule inspectSchedule, Model model) {
 		model.addAttribute("inspectSchedule", inspectSchedule);
-		InspectPlan inspectPlan = new InspectPlan();
-		//查询所有巡检计划编号
-		List<InspectPlan> inspectPlanList = inspectPlanService.findList(inspectPlan);
+		InspectPlan inspectPlan = null;
+		Set<String> inspectPlanSet = inspectPlanSelfService.findAllInspectPlanCode();
+		List<InspectPlan> inspectPlanList = new ArrayList<InspectPlan>();
+		for (String s:inspectPlanSet) {
+			inspectPlan = new InspectPlan();
+			inspectPlan.setInspectPlanCode(s);
+			inspectPlanList.add(inspectPlan);
+		}
 		//将巡检计划编号传入前台
 		model.addAttribute("inspectPlanList", inspectPlanList);
 		return "modules/test/inspectScheduleForm";

@@ -11,6 +11,7 @@ import com.jeesite.modules.sys.entity.Office;
 import com.jeesite.modules.sys.entity.User;
 import com.jeesite.modules.sys.service.EmployeeService;
 import com.jeesite.modules.sys.utils.UserUtils;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -30,7 +31,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.service.EquipInfoService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * equip_infoController
@@ -46,6 +49,9 @@ public class EquipInfoController extends BaseController {
 
 	@Autowired
 	private EmployeeService employeeService;
+
+	@Autowired
+	private EquipInfoSelfService equipInfoSelfService;
 
 	/**
 	 * 获取数据
@@ -101,21 +107,28 @@ public class EquipInfoController extends BaseController {
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated EquipInfo equipInfo) {
-		//Obtain office(department) information based on user information
-		User user = UserUtils.getUser();
-		equipInfo.setEquipManagerCode(user.getUserCode());
-		equipInfo.setEquipManager(user.getUserName());
-		Employee employee = new Employee();
-		employee.setEmpCode(user.getUserCode());
-		List<Employee> list = employeeService.findList(employee);
-		if(list.size() >0){
-			Office office = list.get(0).getOffice();
-			String 	deptId = office.getOfficeCode();
-			equipInfo.setDeptId(deptId);
+		//获取所有设备编号
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		//判断新增设备编号是否已经存在
+		if (equipInfoSet.contains(equipInfo.getEquipId())){
+			return renderResult(Global.TRUE, text("改设备编号已存在，请重新命名！"));
+		}else{
+			//Obtain office(department) information based on user information
+			User user = UserUtils.getUser();
+			equipInfo.setEquipManagerCode(user.getUserCode());
+			equipInfo.setEquipManager(user.getUserName());
+			Employee employee = new Employee();
+			employee.setEmpCode(user.getUserCode());
+			List<Employee> list = employeeService.findList(employee);
+			if(list.size() >0){
+				Office office = list.get(0).getOffice();
+				String 	deptId = office.getOfficeCode();
+				equipInfo.setDeptId(deptId);
 
+			}
+			equipInfoService.save(equipInfo);
+			return renderResult(Global.TRUE, text("保存equip_info成功！"));
 		}
-		equipInfoService.save(equipInfo);
-		return renderResult(Global.TRUE, text("保存equip_info成功！"));
 	}
 	
 	/**

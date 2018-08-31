@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.modules.test.entity.ComponentInfo;
 import com.jeesite.modules.test.service.ComponentInfoService;
+import com.jeesite.modules.test.service.selfService.ComponentInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.RegularMaintainResult;
 import com.jeesite.modules.test.service.RegularMaintainResultService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 定修结果维护Controller
@@ -39,7 +42,7 @@ public class RegularMaintainResultController extends BaseController {
 	private RegularMaintainResultService regularMaintainResultService;
 
 	@Autowired
-	private ComponentInfoService componentInfoService;
+	private ComponentInfoSelfService componentInfoSelfService;
 	
 	/**
 	 * 获取数据
@@ -77,8 +80,14 @@ public class RegularMaintainResultController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(RegularMaintainResult regularMaintainResult, Model model) {
 		//从数据库获取所有备品备件信息传到前端显示
-		ComponentInfo componentInfo = new ComponentInfo();
-		List<ComponentInfo> componentInfoList = componentInfoService.findList(componentInfo);
+		ComponentInfo componentInfo = null;
+		Set<String> componentInfoSet = componentInfoSelfService.findAllComponentCode();
+		List<ComponentInfo> componentInfoList = new ArrayList<ComponentInfo>();
+		for (String s:componentInfoSet) {
+			componentInfo = new ComponentInfo();
+			componentInfo.setComponentCode(s);
+			componentInfoList.add(componentInfo);
+		}
 		model.addAttribute("componentInfoList", componentInfoList);
 
 		model.addAttribute("regularMaintainResult", regularMaintainResult);

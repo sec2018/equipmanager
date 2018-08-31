@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jeesite.modules.test.entity.CheckPlans;
-import com.jeesite.modules.test.service.CheckPlansService;
+import com.jeesite.modules.test.service.selfService.CheckPlanSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,9 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.test.entity.CheckSchedule;
 import com.jeesite.modules.test.service.CheckScheduleService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 点检安排Controller
@@ -39,7 +41,7 @@ public class CheckScheduleController extends BaseController {
 	private CheckScheduleService checkScheduleService;
 
 	@Autowired
-	private CheckPlansService checkPlansService;
+	private CheckPlanSelfService checkPlanSelfService;
 	
 	/**
 	 * 获取数据
@@ -77,9 +79,14 @@ public class CheckScheduleController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(CheckSchedule checkSchedule, Model model) {
 		//初始化点检计划实例作为查询条件
-		CheckPlans checkPlans = new CheckPlans();
-		//查询所有点击计划编号
-		List<CheckPlans> checkPlansList = checkPlansService.findList(checkPlans);
+		CheckPlans checkPlans = null;
+		Set<String> checkPlanSet = checkPlanSelfService.findAllCheckPlanCode();
+		List<CheckPlans> checkPlansList = new ArrayList<CheckPlans>();
+		for (String s:checkPlanSet) {
+			checkPlans = new CheckPlans();
+			checkPlans.setChackPlanCode(s);
+			checkPlansList.add(checkPlans);
+		}
 		//将查询结果传入前端显示
 		model.addAttribute("checkPlansList", checkPlansList);
 		model.addAttribute("checkSchedule", checkSchedule);

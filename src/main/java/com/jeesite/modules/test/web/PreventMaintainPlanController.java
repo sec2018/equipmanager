@@ -3,13 +3,16 @@
  */
 package com.jeesite.modules.test.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.jeesite.modules.test.entity.ComponentInfo;
 import com.jeesite.modules.test.entity.EquipInfo;
 import com.jeesite.modules.test.service.ComponentInfoService;
 import com.jeesite.modules.test.service.EquipInfoService;
+import com.jeesite.modules.test.service.selfService.EquipInfoSelfService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,10 +46,10 @@ public class PreventMaintainPlanController extends BaseController {
 	private PreventMaintainPlanService preventMaintainPlanService;
 
 	 @Autowired
-	 private EquipInfoService equipInfoService;
+	 private ComponentInfoService componentInfoService;
 
 	 @Autowired
-	 private ComponentInfoService componentInfoService;
+	 private EquipInfoSelfService equipInfoSelfService;
 	/**
 	 * 获取数据
 	 */
@@ -132,8 +135,14 @@ public class PreventMaintainPlanController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(PreventMaintainPlan preventMaintainPlan, Model model) {
 		//
-		EquipInfo equipInfo = new EquipInfo();
-		List<EquipInfo> equipInfoList = equipInfoService.findList(equipInfo);
+		EquipInfo equipInfo = null;
+		Set<String> equipInfoSet = equipInfoSelfService.findAllEquipId();
+		List<EquipInfo> equipInfoList = new ArrayList<EquipInfo>();
+		for (String s:equipInfoSet) {
+			equipInfo = new EquipInfo();
+			equipInfo.setEquipId(s);
+			equipInfoList.add(equipInfo);
+		}
 		model.addAttribute("equipInfoList", equipInfoList);
 		//获得预防性维护计划给油脂部位
 		List<PreventMaintainPlan> preventMaintainPlanList = preventMaintainPlanService.findList(preventMaintainPlan);

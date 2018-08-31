@@ -3,6 +3,7 @@
 	<div class="box box-main">
 		<div class="box-header with-border">
 			<div class="box-title">
+				<!--<p id="equipInfoList" hidden="hidden">${text(equipInfoList)}</p>-->
 				<i class="fa fa-list-alt"></i> ${text(inspectPlan.isNewRecord ? '新增巡检计划' : '编辑巡检计划')}
 			</div>
 			<div class="box-tools pull-right">
@@ -466,4 +467,14 @@ function treeselectCallback(id, act, index, layero){
 		});
 	}
 }
+
+//自动设置设备编号
+<!--$(function () {-->
+    <!--var equipInfoList = $('#equipInfoList').text().split(',');-->
+    <!--equipInfoList[0]=equipInfoList[0].substring(1,equipInfoList[0].length);-->
+    <!--equipInfoList[equipInfoList.length-1]=equipInfoList[equipInfoList.length-1].substring(0,equipInfoList[equipInfoList.length-1].length-1);-->
+    <!--for(var i = 0 ;i<equipInfoList.length;i++){-->
+        <!--$("#test").append("<option value='"+i+"'>"+equipInfoList[i]+"</option>");-->
+    <!--}-->
+<!--})-->
 </script>

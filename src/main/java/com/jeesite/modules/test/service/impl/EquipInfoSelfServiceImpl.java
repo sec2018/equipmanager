@@ -16,8 +16,8 @@ public class EquipInfoSelfServiceImpl implements EquipInfoSelfService {
     private EquipInfoSelfDao equipInfoSelfDao;
 
     @Override
-    public Set<String> findEquipAllType() {
+    public Set<String> findAllEquipId() {
 
-        return equipInfoSelfDao.findEquipAllType();
+        return equipInfoSelfDao.findAllEquipId();
     }
 }
