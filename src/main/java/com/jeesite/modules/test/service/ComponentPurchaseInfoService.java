@@ -3,21 +3,18 @@
  */
 package com.jeesite.modules.test.service;
 
-import java.util.List;
-
+import com.jeesite.common.entity.Page;
+import com.jeesite.common.service.CrudService;
+import com.jeesite.modules.file.utils.FileUploadUtils;
 import com.jeesite.modules.test.dao.ComponentInfoDao;
+import com.jeesite.modules.test.dao.ComponentPurchaseInfoChildDao;
+import com.jeesite.modules.test.dao.ComponentPurchaseInfoDao;
 import com.jeesite.modules.test.entity.ComponentInfo;
+import com.jeesite.modules.test.entity.ComponentPurchaseInfo;
+import com.jeesite.modules.test.entity.ComponentPurchaseInfoChild;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.jeesite.common.entity.Page;
-import com.jeesite.common.service.CrudService;
-import com.jeesite.modules.test.entity.ComponentPurchaseInfo;
-import com.jeesite.modules.test.dao.ComponentPurchaseInfoDao;
-import com.jeesite.modules.file.utils.FileUploadUtils;
-import com.jeesite.modules.test.entity.ComponentPurchaseInfoChild;
-import com.jeesite.modules.test.dao.ComponentPurchaseInfoChildDao;
 
 /**
  * 备品备件入库Service
@@ -109,12 +106,12 @@ public class ComponentPurchaseInfoService extends CrudService<ComponentPurchaseI
 
 				componentPurchaseInfoChildDao.delete(componentPurchaseInfoChild);
 				//删除时，更新备品备件表的数量
-//				ComponentInfo componentInfo = new ComponentInfo();
-//				componentInfo.setComponentCode(componentPurchaseInfoChild.getComponentCode());
-//				ComponentInfo	componentInfo2 = componentInfoDao.getByEntity(componentInfo);
-//				Long count = componentInfo2.getComponentNumber()-componentPurchaseInfoChild.getPurchaseNumber();
-//				componentInfo2.setComponentNumber(count);
-//				componentInfoDao.update(componentInfo2);
+				ComponentInfo componentInfo = new ComponentInfo();
+				componentInfo.setComponentCode(componentPurchaseInfoChild.getComponentCode());
+				ComponentInfo	componentInfo2 = componentInfoDao.getByEntity(componentInfo);
+				Long count = componentInfo2.getComponentNumber()-componentPurchaseInfoChild.getPurchaseNumber();
+				componentInfo2.setComponentNumber(count);
+				componentInfoDao.update(componentInfo2);
 			}
 		}
 	}
