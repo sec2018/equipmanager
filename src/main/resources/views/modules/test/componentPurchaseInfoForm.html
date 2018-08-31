@@ -205,4 +205,23 @@ $("#inputForm").validate({
 		}, "json");
     }
 });
+
+
+//获取url参数
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURIComponent(r[2]); return null;
+    }
+})(jQuery);
+
+//入库自动获取申请编号
+$(function () {
+    if($.getUrlParam("opera")=="addcomponent"){
+
+         $('#purchaseApplyCode').text($.getUrlParam("opera"));
+	}
+
+})
 </script>

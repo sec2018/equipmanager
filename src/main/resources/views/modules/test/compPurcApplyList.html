@@ -109,6 +109,8 @@ $('#dataGrid').dataGrid({
 				if(row.applyStatus == '审核通过'){
 				<%if(hasPermi('test:compPurcApply:view')){%>
 						actions.push('<a href="${ctx}/test/compPurcApply/form?purchaseApplyCode='+row.purchaseApplyCode+'&opera=view" class="btnList" title="${text('查看')}"><i class="fa fa-eye"></i></a>&nbsp;');
+
+						actions.push('<a href="${ctx}/test/componentPurchaseInfo/form?purchaseApplyCode='+row.purchaseApplyCode+'&opera=addcomponent" class="btnList" title="${text('入库')}"><i class="fa fa-apple"></i></a>&nbsp;');
 				<% } %>
 				}
 				else {
