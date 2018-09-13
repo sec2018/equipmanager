@@ -1,0 +1,95 @@
+*,
+::before,
+::after{
+   /**
+    * 选中所有元素和所有伪元素
+    */
+   margin: 0;
+   padding: 0;
+   /**
+    * 针对于移动端
+    */
+   box-sizing: border-box;/*从边框开始计算*/
+   -webkit-box-sizing: border-box;/*兼容低版本浏览器(主流移动端浏览器兼容)*/
+   -webkit-tap-highlight-color:transparent;/*高亮效果清除 透明 */
+}
+.main{
+    width: 100%;
+    height: 100%;
+    max-width: 1366px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.work_bottom{
+	width:100%;
+	padding: 2px;
+}
+.title{
+	margin: 0;
+    width: 100%;
+    height: 44px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+   /* background: #f9f9f9;*/
+   /* background: url(../images/topback1.png) repeat-x;*/
+}
+
+.title h3{
+	text-align: center;
+	height: 43px;
+	line-height: 1;
+	font-family: 'microsoft yahei';
+	color: #115b5a;
+    font-weight: normal;
+}
+
+.content{
+	width: 100%;
+}
+.contain {
+	width: 100%;
+	margin: 0 auto;
+}
+h1 {
+	margin: 40px 0 20px 0;
+}
+h2 {
+	font-size: 1.5em;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #DDD;
+	margin-top: 50px;
+	margin-bottom: 25px;
+}
+table th:first-child {
+	width: 150px;
+}
+.spacer  span{
+	line-height: 72px;
+    font-weight: 600;
+    font-size: 14px;
+    width:50%;
+    display: block;
+	float:left;	
+	text-align: center;	
+	font-family: 'microsoft yahei';	
+	color: #707d8d;
+}
+
+.fn-gantt .leftPanel .name{
+	width: 50% !important;
+	text-align: center;
+}
+.fn-gantt .leftPanel .desc {
+	width: 50% !important;
+	text-align: center;
+}
+		
+.fn-gantt .leftPanel .fn-label{
+	font-size: 12px;
+    color: #999;
+}
+	
+.gantt, .gantt2{
+	margin: 0;
+}		
+

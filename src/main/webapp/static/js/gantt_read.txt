@@ -1,0 +1,207 @@
+代码说明
+
+jquery.cookie.js
+
+     用于cookie管理，如果需要在甘特图中使用cookie则需要在页面中引用该js文件，否则不需要引用。
+
+
+
+jquery.fn.gantt.js
+
+     JQuery.Gantt组件的核心脚本文件，所有的甘特图功能代码都在这个文件中。
+
+     代码结构解析：
+
+$.fn.gantt = function (options)：甘特图部件对象
+
+
+
+cookieKey：cookie的键
+
+scales：时间范围的级别
+
+settings：部件设置集
+
+
+
+source：数据源
+
+itemsPerPage：分页的每页数据行数
+
+months：列头处月份名称
+
+dow：列头处星期名称
+
+startPos：默认开始位置日期
+
+navigate：底部导航，buttons为按钮式的，scroll为滑块式的
+
+scale：甘特图每一列的时间范围
+
+useCookie：是否使用cookie，如果使用需要引用jquery.cookie.js
+
+maxScale：最大时间范围
+
+minScale：最小时间范围
+
+waitText：等待提示文本
+
+onItemClick：有数据范围内点击事件
+
+onAddClick：无数据范围内点击事件
+
+onRender：渲染事件
+
+scrollToToday：设置是否滚动到今天
+
+
+
+基础设置项
+
+getMaxDate：返回最大可能的日期在scale值的标准下
+
+getMinDate：返回最小可能的日期在scale值的标准下
+
+parseDateRange：返回一个日期对象数组介于from和to之间，时间单位为天
+
+parseTimeRange：返回一个日期对象数组介于from和to之间，时间单位为小时
+
+parseWeeksRange：返回一个日期对象数组介于from和to，时间单位为周
+
+parseMonthsRange：返回一个日期对象数组介于from和to，时间单位为月
+
+dateDeserialize：从字符串反序列化成日期
+
+genId：用日期创建ID
+
+getCellSize：获取当前单元格的大小
+
+getRightPanelSize：获取当前右panel的大小
+
+getPageHeight：获取当前页面的高度
+
+getProgressBarMargin：获取当前进度条的margin大小
+
+elementFromPoint：获取位于指定点的最高处的元素
+
+create：创建图表
+
+init：初始化视图，计算行数、页数、可见的开始时间与结束时间
+
+render：渲染grid
+
+leftPanel：创建左侧Panel
+
+dataPanel：创建右侧数据Panel
+
+rightPanel：创建右侧头部Panel
+
+navigation：导航
+
+createProgressBar：创建进度条
+
+markNow：移除”wd“class添加”today“class到当前的scale模式
+
+fillData：填充图表，解析数据并填充到panel
+
+navigateTo：导航到
+
+navigatePage：导航到指定的页面
+
+zoomInOut：变更空间轴级次（zoom）
+
+mouseScroll：通过鼠标移动图表
+
+wheelScroll：通过鼠标滚轮移动图表
+
+sliderScroll：通过滑块控制图表
+
+scrollPanel：更新滚动panel的margin
+
+synchronizeScroller：同步滚动
+
+repositionLabel：重新定位数据标签
+
+waitToggle：切换等待
+
+Date.prototype.getWeekId：获取weekid用于标识week的div的id特性，返回字符串，格式为dh-YYYY-WW，其中的ww是一年中的第几周
+
+Date.prototype.genRepDate：按部件设置属性中scale的值获取时间范围，以秒为时间单位
+
+Date.prototype.getDayOfYear：获取日期在一年中的第几天
+
+Date.prototype.getWeekOfYear：获取日期在一年中的第几周
+
+Date.prototype.getDaysInMonth：获取日期所在月份的天数
+
+Date.prototype.hasWeek：如果日期驻留在一周的边界，返回真
+
+Date.prototype.getDayForWeek：返回一周的开始日期的日期对象
+
+findday：以毫秒为时间单位匹配一个指定的日期
+
+findweek：以毫秒为时间单位匹配一个指定的周
+
+findmonth：以毫秒为时间单位匹配一个指定的月
+
+选择器方法（a：元素，i：索引，m：值）： $.extend($.expr[":"], {});
+
+
+
+日期原型
+
+Grid管理器（负责导航和渲染）：core
+
+实用功能：tools
+
+选项扩展：this.each(function () {};);
+
+Value 配置
+
+values: [{
+    to: "/Date(1328832000000)/", from: "/Date(1333411200000)/",
+    desc: "Something",
+    label: "Example Value",
+    customClass: "ganttRed",
+    dataObj: foo.bar[i]
+}]
+参数	接收类型	解释
+to	String (Date)	结束时间，以毫秒为换算单位
+from	String (Date)	开始时间，以毫秒为换算单位
+desc	String	鼠标悬停显示文本
+label	String	甘特项显示文本
+customClass	String	甘特项的自定义class
+dataObj	All	一个直接应用于甘特项的数据对象
+注：其中from和to的时间为毫秒数，例如：/Date(1320192000000)/，计算方式为时间变量减去时间初始值（1970-1-1）的差值换算为毫秒
+
+http://www.yunnanhaoli.com/web/jquery/878.html
+https://blog.csdn.net/lxysoid/article/details/77869771
+var source = new Array();
+    var tmpData = new Object();
+    tmpData.values = new Array();
+    var tmpValues = new Object();
+    var all = 0;
+    var fromDate = "";
+    var toDate = "";
+    var labelData = "";
+    var customClassData = "";
+    $.each(data,function(i,item){
+        tmpData = {};
+        tmpData.values = [];
+        tmpValues = {};
+        tmpData.name = item.name;
+        tmpData.progress = Number(item.scale);
+        fromDate = "/Date("+item.startDate+")/";
+        if(item.endDate == null || item.endDate == ''){
+            item.endDate = Date.parse(new Date());
+            toDate = "/Date("+item.endDate+")/";
+        }
+        customClassData = "ganttRed";
+        tmpValues.from = fromDate;
+        tmpValues.to = toDate;
+        tmpValues.label = item.name+","+Number(item.scale)+"%";
+        tmpValues.customClass = customClassData;
+        tmpData.values[0] = tmpValues;
+        source[all] = tmpData;
+        all++;
+    });

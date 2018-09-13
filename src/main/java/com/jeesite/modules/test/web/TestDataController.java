@@ -118,5 +118,14 @@ public class TestDataController extends BaseController {
 		testDataService.delete(testData);
 		return renderResult(Global.TRUE, text("删除数据成功！"));
 	}
-	
+
+
+	/**
+	 * 查看甘特图
+	 */
+	@RequestMapping(value = "gantetu")
+	public String gantetu() {
+		return "modules/mark/work_gantt";
+	}
+
 }

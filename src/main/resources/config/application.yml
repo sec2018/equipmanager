@@ -13,4 +13,8 @@ spring:
   main:
     banner-mode: "off"
 
+  devtools:
+    restart:
+      enabled: true
+
 
