@@ -128,4 +128,12 @@ public class TestDataController extends BaseController {
 		return "modules/mark/work_gantt";
 	}
 
+	/**
+	 * 查看可拖拽甘特图
+	 */
+	@RequestMapping(value = "gantt")
+	public String gantt() {
+		return "modules/mark/index";
+	}
+
 }

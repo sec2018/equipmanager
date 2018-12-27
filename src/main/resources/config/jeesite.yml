@@ -34,7 +34,7 @@ jdbc:
   driver: com.mysql.jdbc.Driver
   url: jdbc:mysql://122.112.252.45:3306/jeesite?useSSL=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
   username: watchdog
-  password: 123456
+  password: xxxxxxx
   testSql: SELECT 1
 
 #  # Oracle 数据库配置
